@@ -16,7 +16,7 @@ function send500(response){
 	response.write("Server error.");
 	response.end();
 }
-
+console.log('AHHHH')
 const server = http.createServer(function (request, response) {
 	console.log(request.url);
 	if(request.method === "GET"){
