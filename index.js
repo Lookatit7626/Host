@@ -1,92 +1,76 @@
-const express = require('express')
-const bodyParser = require('body-parser')
-const axios = require('axios');
+const http = require('http');
+const fs = require("fs");
+		
 
-const { Worker, isMainThread, parentPort } = require('worker_threads');
-
-function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+let items = [					
+	{name: "test"}
+]
+function send404(response){
+	response.statusCode = 404;
+	response.write("Unknown resource.");
+	response.end();
 }
 
-var alreadyping = false
-
-if (isMainThread) {
-  const worker = new Worker(__filename);
-
-  // Ministry of Foregin Affairs
-  worker.on('message', (message) => {
-    console.log(`Received message from Embassy (Server): ${message}`);
-  });
-
-  // Homeland
-  console.log("Starting server...")
-
-  const app = express()
-
-  app.use(bodyParser.urlencoded({ extended: false }))
-
-  app.get('/', function (req, res) {
-    const body = req.body.Body
-    res.set('Content-Type', 'text/plain')
-    res.send(`Node js server 1`)
-  })
-
-  app.get('/ping', function (req, res) {
-    const body = req.body.Body
-    res.set('Content-Type', 'text/plain')
-    res.send(`Sending ping to server 2`)
-    worker.postMessage('ping');
-  })
-
-  app.post('/playerRank', function (req, res, arg1) {
-    const body = req.body.Body
-    res.send(`Sending ping to server 2`)
-  })
-      
-  app.listen(3000, function (err) {
-    if (err) {
-      throw err
-  }
-  console.log('Server started on port 3000')
-  })
-
-  worker.postMessage('ping');
-} else {
-  // Embassy
-  parentPort.on('message', (message) => {
-    if (message == "Test") {
-        console.log("Message")
-    }  
-    else if (message == "ping") {
-      function Pcall(Function) {
-        try{
-          Function()
-        } catch(e) {
-          console.log(`An unexpected error has occured: ${e}`)
-        }
-      }
-      
-      var newDate = new Date();
-      console.log(newDate)
-      try{
-        axios.get('https://server-3-public-administration.mamajoe5.repl.co/')
-      } catch(e) {
-        console.log(e)
-      }
-      try {
-        axios.get('https://operation-auxiliary-public-service.mamajoe5.repl.co/')
-      } catch(e) {
-        console.log(e)
-      };
-      try {
-        axios.get('https://ingolia-internal-administration-service.mamajoe5.repl.co/')
-      } catch(e) {
-        console.log(e)
-      };
-      wait(1500).then(() => {
-        axios.get('https://server-2-javascript.mamajoe5.repl.co/ping')
-      })
-    }
-    parentPort.postMessage('Success');
-  });
+function send500(response){
+	response.statusCode = 500;
+	response.write("Server error.");
+	response.end();
 }
+
+const server = http.createServer(function (request, response) {
+	console.log(request.url);
+	if(request.method === "GET"){
+		if(request.url === "/" {
+			fs.readFile("todo.html", function(err, data){
+				response.statusCode = 200;
+				response.setHeader("Content-Type", "text/html");
+				response.write("Get Request");
+				response.end();
+			});
+		}else if(request.url === "/list"){
+			fs.readFile("todo.js", function(err, data) {
+				if (err) {
+					response.statusCode = 500;
+					response.write("Server error.");
+					response.end();
+					return;
+				}
+				response.statusCode = 200;
+				response.setHeader("Content-Type", "application/javascript");
+				response.write(data);
+				response.end();
+			});
+		
+		}else{
+			response.statusCode = 404;
+			response.write("Unknwn resource.");
+			response.end();
+		}
+	}else if(request.method === "POST"){
+		if(request.url === "/list"){
+			let body = "";
+			request.on('data', (chunk) => {
+				body += chunk;
+			})
+			request.on('end', () => {
+				let newItem = JSON.parse(body);
+				if(newItem.hasOwnProperty("itemname")){
+					items.push(newItem);
+					response.statusCode = 201;
+					response.write(String(newItem.name));
+					response.end();
+					return;
+				}else{
+					send404(response);
+					alert("Try again!");
+				}
+			})
+		}else{
+			send404(response);
+			alert("Try again!");
+		}
+	}
+});
+
+server.listen(3000);
+console.log('Server running at Github.com!');
