@@ -77,6 +77,19 @@ app.post('/test/post', (req, res) => {
     }
 });
 
+app.post('/data/post/1', (req, res) => {
+    try {
+      const { Name, Password } = req.body;
+      const responseData = { message: 'POST request received successfully!', receivedData };
+      res.json(responseData);
+      console.log(`Name : ${Name}, Password ${Password}`)
+    } catch (error) {
+      
+      const errorNumber = 500; // You can customize this based on your application's error codes
+        error500(res)
+    }
+});
+
 app.use((req, res, next) => {
     error404(res)
 });
