@@ -53,7 +53,7 @@ async function doesTableExist(tableName) {
 }
 
 async function createCarsTable() {
-    const client = await client.connect();
+    const client = await pool.connect();
 
     try {
         // Check if the "cars" table exists
@@ -63,7 +63,7 @@ async function createCarsTable() {
             // SQL query to create the "cars" table
             const createTableQuery = `
                 CREATE TABLE PlayerData (
-                    brand VARCHAR(255),
+                    PlayerName VARCHAR(255),
                     model VARCHAR(255),
                     year INT
                 );
