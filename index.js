@@ -63,6 +63,11 @@ app.get('/test/500', (req, res) => {
     error500(res);
 });
 
+app.get('/test/get', (req, res) => {
+    const data = { message: 'GET request received successfully!' };
+    res.json(data);
+});
+
 app.post('/test/post', (req, res) => {
     try {
       
