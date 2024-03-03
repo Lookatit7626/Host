@@ -4,7 +4,7 @@ const ping = require('ping');
 
 var DateAndTime = "";
 const app = express();
-const port = 3000;
+const port = 4000;
 
 function wait(sec) {
     return new Promise((resolve, reject) => {
