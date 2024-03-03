@@ -20,15 +20,15 @@ function wait(sec) {
 }
 
 function error403(res) {
-  res.status(403).sendFile(__dirname + '/error403.html');
+  res.status(403).sendFile('./error403.html');
 };
 
 function error404(res) {
-  res.status(404).sendFile(__dirname + '/error404.html');
+  res.status(404).sendFile('./error403.html');
 };
 
 function error500(res) {
-  res.status(500).sendFile(__dirname + '/error500.html');
+  res.status(500).sendFile('./error403.html');
 };
 
 app.use(bodyParser.json());
