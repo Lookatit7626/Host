@@ -84,9 +84,7 @@ app.post('/test/post', (req, res) => {
 
 app.post('/data/post/1', (req, res) => {
     try {
-      const JSONDATA = req.body;
-      const Name = JSONDATA.Name;
-      const Password = JSONDATA.Password;
+      const { Name, Password } = req.body;
       const responseData = { message: 'POST request received successfully!', Name };
       res.json(responseData);
       console.log(`Name : ${Name}, Password ${Password}`)
