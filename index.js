@@ -31,6 +31,62 @@ function wait(sec) {
     });
 }
 
+async function doesTableExist(tableName) {
+    const client = await client.connect();
+
+    try {
+        // Query the information schema to check if the table exists
+        const result = await client.query(
+            `SELECT EXISTS (
+                SELECT 1
+                FROM   information_schema.tables
+                WHERE  table_name = $1
+            );`,
+            [tableName]
+        );
+
+        // The result.rows[0].exists will be true if the table exists, false otherwise
+        return result.rows[0].exists;
+    } finally {
+        client.release(); // Release the client back to the pool
+    }
+}
+
+async function createCarsTable() {
+    const client = await client.connect();
+
+    try {
+        // Check if the "cars" table exists
+        const tableExists = await doesTableExist('PlayerData');
+
+        if (!tableExists) {
+            // SQL query to create the "cars" table
+            const createTableQuery = `
+                CREATE TABLE PlayerData (
+                    brand VARCHAR(255),
+                    model VARCHAR(255),
+                    year INT
+                );
+            `;
+
+            // Execute the query to create the table
+            await client.query(createTableQuery);
+
+            console.log('The "PlayerData" table has been created successfully.');
+        } else {
+            console.log('The "PlayerData" table already exists.');
+        }
+    } finally {
+        client.release(); // Release the client back to the pool
+    }
+}
+
+// Call the function to create the "cars" table
+createCarsTable()
+    .catch((error) => {
+        console.error('Error checking or creating "PlayerData" table:', error);
+    });
+
 function error403(res) {
   res.status(403).sendFile('./error403.html');
 };
