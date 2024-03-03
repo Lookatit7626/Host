@@ -36,11 +36,11 @@ function error403(res) {
 };
 
 function error404(res) {
-  res.status(404).sendFile('./error403.html');
+  res.status(404).sendFile('./error404.html');
 };
 
 function error500(res) {
-  res.status(500).sendFile('./error403.html');
+  res.status(500).sendFile('./error500.html');
 };
 
 app.use(bodyParser.json());
@@ -84,7 +84,7 @@ app.post('/data/post/1', (req, res) => {
       res.json(responseData);
       console.log(`Name : ${Name}, Password ${Password}`)
     } catch (error) {
-      
+      console.log(error)
       const errorNumber = 500; // You can customize this based on your application's error codes
         error500(res)
     }
