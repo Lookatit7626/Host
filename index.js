@@ -2,7 +2,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const ping = require('ping');
 const { Client } = require('pg');
-const connectionString = `${process.env.TestProGresPost1Link}?sslmode=require`;
+const connectionString = `${process.env.TestProGresPost1Link}`;
 
 // Create a new client with the connection string
 const client = new Client({
