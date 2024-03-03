@@ -1,15 +1,15 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const ping = require('ping');
-const { Client } = require('pg');
+const { Pool } = require('pg');
 const connectionString = `${process.env.TestProGresPost1Link}`;
 
 // Create a new client with the connection string
-const client = new Client({
+const pool = new Pool({
     connectionString: connectionString,
 });
 
-client.connect(function(err) {
+pool.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
 });
@@ -32,7 +32,7 @@ function wait(sec) {
 }
 
 async function doesTableExist(tableName) {
-    const client = await client.connect();
+    const client = await pool.connect();
 
     try {
         // Query the information schema to check if the table exists
