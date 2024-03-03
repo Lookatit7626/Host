@@ -1,76 +1,93 @@
-const http = require('http');
-const fs = require("fs");
-		
+// runCommand.js
 
-let items = [					
-	{name: "test"}
-]
-function send404(response){
-	response.statusCode = 404;
-	response.write("Unknown resource.");
-	response.end();
-}
+const { exec } = require('child_process');
 
-function send500(response){
-	response.statusCode = 500;
-	response.write("Server error.");
-	response.end();
-}
-console.log('AHHHH')
-const server = http.createServer(function (request, response) {
-	console.log(request.url);
-	if(request.method === "GET"){
-		if(request.url === "/" {
-			fs.readFile("todo.html", function(err, data){
-				response.statusCode = 200;
-				response.setHeader("Content-Type", "text/html");
-				response.write("Get Request");
-				response.end();
-			});
-		}else if(request.url === "/list"){
-			fs.readFile("todo.js", function(err, data) {
-				if (err) {
-					response.statusCode = 500;
-					response.write("Server error.");
-					response.end();
-					return;
-				}
-				response.statusCode = 200;
-				response.setHeader("Content-Type", "application/javascript");
-				response.write(data);
-				response.end();
-			});
-		
-		}else{
-			response.statusCode = 404;
-			response.write("Unknwn resource.");
-			response.end();
-		}
-	}else if(request.method === "POST"){
-		if(request.url === "/list"){
-			let body = "";
-			request.on('data', (chunk) => {
-				body += chunk;
-			})
-			request.on('end', () => {
-				let newItem = JSON.parse(body);
-				if(newItem.hasOwnProperty("itemname")){
-					items.push(newItem);
-					response.statusCode = 201;
-					response.write(String(newItem.name));
-					response.end();
-					return;
-				}else{
-					send404(response);
-					alert("Try again!");
-				}
-			})
-		}else{
-			send404(response);
-			alert("Try again!");
-		}
-	}
+// Run the command
+exec('npm install body-parser', (error, stdout, stderr) => {
+    if (error) {
+        console.error(`Error: ${error.message}`);
+        return;
+    }
+    if (stderr) {
+        console.error(`stderr: ${stderr}`);
+        return;
+    }
+    console.log(`stdout: ${stdout}`);
 });
 
-server.listen(3000);
-console.log('Server running at Github.com!');
+const bodyParser = require('body-parser');
+const express = require('express');
+const ping = require('ping');
+
+const targetHost = 'https://azureserv.com/ping/id1?__cpo=aHR0cHM6Ly9lY2xpcHNlLXNlcnZlci5nbGl0Y2gubWU';
+
+var DateAndTime = "";
+const app = express();
+const port = 3000;
+
+function wait(sec) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            // Simulating a condition that might lead to rejection
+            if (sec < 3) {
+                reject(new Error('Wait time is too short. Promise rejected.'));
+            } else {
+                resolve();
+            }
+        }, sec * 1000);
+    });
+}
+
+function error403(res) {
+  res.status(403).sendFile(__dirname + '/error403.html');
+};
+
+function error404(res) {
+  res.status(404).sendFile(__dirname + '/error404.html');
+};
+
+function error500(res) {
+  res.status(500).sendFile(__dirname + '/error500.html');
+};
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+    const data = { message: 'GET request received successfully!' };
+    res.json(data);
+});
+
+app.get('/test/403', (req, res) => {
+    error403(res);
+});
+
+app.get('/test/404', (req, res) => {
+    error404(res);
+});
+
+app.get('/test/500', (req, res) => {
+    error500(res);
+});
+
+app.post('/test/post', (req, res) => {
+    try {
+      
+      const receivedData = req.body;
+      const responseData = { message: 'POST request received successfully!', receivedData };
+      res.json(responseData);
+      
+    } catch (error) {
+      
+      const errorNumber = 500; // You can customize this based on your application's error codes
+        error500(res)
+    }
+});
+
+app.use((req, res, next) => {
+    error404(res)
+});
+
+app.listen(port, () => {
+    console.log(``);
+});
