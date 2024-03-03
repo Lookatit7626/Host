@@ -1,25 +1,6 @@
-// runCommand.js
-
-const { exec } = require('child_process');
-
-// Run the command
-exec('npm install body-parser', (error, stdout, stderr) => {
-    if (error) {
-        console.error(`Error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.error(`stderr: ${stderr}`);
-        return;
-    }
-    console.log(`stdout: ${stdout}`);
-});
-
 const bodyParser = require('body-parser');
 const express = require('express');
 const ping = require('ping');
-
-const targetHost = 'https://azureserv.com/ping/id1?__cpo=aHR0cHM6Ly9lY2xpcHNlLXNlcnZlci5nbGl0Y2gubWU';
 
 var DateAndTime = "";
 const app = express();
