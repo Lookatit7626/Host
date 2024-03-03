@@ -1,6 +1,17 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const ping = require('ping');
+const { Client } = require('pg');
+var connectionString = process.env.TestProGresPost1Link + "?sslmode=require;
+
+const client = new Client({
+    connectionString: connectionString
+});
+
+client.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
 
 var DateAndTime = "";
 const app = express();
