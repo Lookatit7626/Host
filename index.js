@@ -6,7 +6,7 @@ var connectionString = process.env.TestProGresPost1Link + "?sslmode=require";
 
 const client = new Client({
     user: process.env.TestProGresPost1UserName + "?sslmode=require",
-    host: process.env.TestProGresPost1Link + "?sslmode=require",
+    host: process.env.TestProGresPost1HostName + "?sslmode=require",
     database: process.env.TestProGresPost1Database + "?sslmode=require",
     password: process.env.TestProGresPost1Password + "?sslmode=require",
     port: process.env.TestProGresPost1Port, // Default PostgreSQL port
