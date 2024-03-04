@@ -277,12 +277,12 @@ app.post('/data/post/playerdata', (req, res) => {
         .then((exists) => {
         if (exists) {
             const PlayerDataPassword = getPlayerPassword(Name);
-            if !(Password == PlayerDataPassword) {
+            if (Password !== PlayerDataPassword) {
                 res.json("403, Invalid credentials.. please relogin to your account!");
             } else {
                 const PlayerData = getPlayerDataByName(Name);
                 const SplitedData = PlayerData.split('-SPLIT-');
-                if (SplitedData[0] == "fail") {
+                if (SplitedData[0] === "fail") {
                     res.json("no data");
                 } else {
                     res.json(SplitedData[1]);
