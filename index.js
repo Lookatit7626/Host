@@ -66,7 +66,7 @@ async function getPlayerDataByName(playerName) {
             return 'fail-SPLIT-No player data found for the specified name.';
         } else {
             console.table(`Success-SPLIT-${result.rows}`);
-            return `Success-SPLIT-${JSON.stringify(result.rows)}`;
+            return result.rows[0].data;
         }
     } finally {
         client.release();
@@ -185,7 +185,8 @@ app.post('/data/post/playerdata', async (req, res) => {
                 }
             } else {
                 const PlayerData = await getPlayerDataByName(Name);
-                res.json(PlayerData);
+                const dataValue = PlayerData[0].data;
+                res.json(dataValue);
             }
         } else {
             res.json("Player does not exist!");
