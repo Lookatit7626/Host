@@ -162,6 +162,29 @@ async function createPlayerData(playerName, password, data, HWID) {
     }
 }
 
+async function updatePlayerData(playerName, newData) {
+    const client = await pool.connect();
+    try {
+        const updateQuery = `
+            UPDATE playerdata
+            SET data = $1
+            WHERE PlayerName = $2
+            RETURNING *;
+        `;
+        const result = await client.query(updateQuery, [newData, playerName]);
+
+        if (result.rows.length === 0) {
+            console.log(`Player data not updated. No player found with the name: ${playerName}`);
+            return 'fail-SPLIT-No player found for the specified name.';
+        } else {
+            console.table(`Player data updated successfully for ${playerName}`);
+            return 'success-SPLIT-Player data updated successfully.';
+        }
+    } finally {
+        client.release();
+    }
+}
+
 const app = express();
 const port = 4000;
 
@@ -186,6 +209,34 @@ app.post('/data/post/playerdata', async (req, res) => {
             } else {
                 const PlayerData = await getPlayerDataByName(Name);
                 res.json(PlayerData);
+            }
+        } else {
+            res.json("Player does not exist!");
+        }
+    } catch (error) {
+        console.error('An error occurred while receiving data!', error);
+        res.status(500).json("An error has occurred while receiving data! (Bad argument)");
+    }
+});
+
+app.post('/data/post/editdata', async (req, res) => {
+    try {
+        const { Name, Password, Data } = req.body;
+
+        // Use await with all asynchronous functions
+        const exists = await doesPlayerExist(Name);
+
+        if (exists) {
+            const PlayerDataPassword = await getPlayerPassword(Name);
+            if (Password !== PlayerDataPassword) {
+                if (PlayerDataPassword === "fail-split-unexpected error has occurred") {
+                    res.status(400).json("Unexpected error has occurred!");
+                } else {
+                    res.status(403).json("Invalid credentials... please relogin to your account!");
+                }
+            } else {
+                updatePlayerData(Name, Data)
+                res.json("Updated data");
             }
         } else {
             res.json("Player does not exist!");
