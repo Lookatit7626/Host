@@ -57,14 +57,14 @@ async function createCarsTable() {
 
     try {
         // Check if the "cars" table exists
-        const tableExists = await doesTableExist('PlayerData');
+        const tableExists = await doesTableExist('playerdata');
 
         if (!tableExists) {
             // SQL query to create the "cars" table
             const createTableQuery = `
-                CREATE TABLE PlayerData (
-                    PlayerName VARCHAR(255),
-                    model VARCHAR(255),
+                CREATE TABLE playerdata (
+                    PlayerName VARCHAR(50),
+                    model VARCHAR(1000),
                     year INT
                 );
             `;
@@ -72,9 +72,9 @@ async function createCarsTable() {
             // Execute the query to create the table
             await client.query(createTableQuery);
 
-            console.log('The "PlayerData" table has been created successfully.');
+            console.log('The "playerdata" table has been created successfully.');
         } else {
-            console.log('The "PlayerData" table already exists.');
+            console.log('The "playerdata" table already exists.');
         }
     } finally {
         client.release(); // Release the client back to the pool
@@ -84,7 +84,7 @@ async function createCarsTable() {
 // Call the function to create the "cars" table
 createCarsTable()
     .catch((error) => {
-        console.error('Error checking or creating "PlayerData" table:', error);
+        console.error('Error checking or creating "playerdata" table:', error);
     });
 
 function error403(res) {
