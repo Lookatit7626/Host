@@ -191,6 +191,46 @@ app.post('/data/post/createprofile', async (req, res) => {
     }
 });
 
+app.get('/', (req, res) => {
+    const data = { message: 'GET request received successfully!' };
+    res.json(data);
+});
+
+app.get('/test/403', (req, res) => {
+    error403(res);
+});
+
+app.get('/test/404', (req, res) => {
+    error404(res);
+});
+
+app.get('/test/500', (req, res) => {
+    error500(res);
+});
+
+app.get('/test/get', (req, res) => {
+    const data = { message: 'GET request received successfully!' };
+    res.json(data);
+});
+
+app.post('/test/post', (req, res) => {
+    try {
+
+      const receivedData = req.body;
+      const responseData = { message: 'POST request received successfully!', receivedData };
+      res.json(responseData);
+
+    } catch (error) {
+
+      const errorNumber = 500; // You can customize this based on your application's error codes
+        error500(res)
+    }
+});
+
+app.use((req, res, next) => {
+    error404(res)
+});
+
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
 });
