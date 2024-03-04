@@ -132,6 +132,22 @@ async function checkDuplicateHWID(HWIDToCheck) {
 async function createPlayerData(playerName, password, data, HWID) {
     const client = await pool.connect();
     try {
+        // Check if the HWID limit is exceeded
+        const isExceededLimit = await checkDuplicateHWID(HWID);
+
+        // Check if the player name already exists
+        const doesExist = await doesPlayerExist(playerName);
+
+        if (isExceededLimit || doesExist) {
+            // Return a response indicating the error
+            const errorMessage = isExceededLimit
+                ? "Exceeded HWID limit"
+                : "Player with the same name already exists.";
+            console.log(errorMessage);
+            return errorMessage;
+        }
+
+        // If conditions are met, proceed with creating player data
         const insertQuery = `
             INSERT INTO playerdata (PlayerName, Password, Data, HWID)
             VALUES ($1, $2, $3, $4)
@@ -139,6 +155,9 @@ async function createPlayerData(playerName, password, data, HWID) {
         `;
         const result = await client.query(insertQuery, [playerName, password, data, HWID]);
         console.table(result.rows);
+
+        // Return a success message or data if needed
+        return `Player data created successfully: ${JSON.stringify(result.rows)}`;
     } finally {
         client.release();
     }
@@ -177,11 +196,12 @@ app.post('/data/post/createprofile', async (req, res) => {
     try {
         const { Name, Password, HWID } = req.body;
 
-        if (await checkDuplicateHWID(HWID)) {
-            res.json("Has two profiles.");
-        } else {
-            await createPlayerData(Name, Password, '', HWID);
-            res.json("Created profile.");
+        const results = await createPlayerData(Name, Password, '', HWID);
+
+        if (results === "Exceeded HWID limit") {
+            res.status(200).json("exceeded HWID limit");
+        } else if (results === "Player with the same name already exists.") {
+            res.status(200).json("Must not be used before");
         }
 
         console.log(`Name : ${Name}, Password ${Password}`);
