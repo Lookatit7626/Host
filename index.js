@@ -178,14 +178,15 @@ app.post('/data/post/playerdata', async (req, res) => {
         if (exists) {
             const PlayerDataPassword = await getPlayerPassword(Name);
             if (Password !== PlayerDataPassword) {
-                if (PlayerDataPassword === "fail-split-unexpected error has occured") {
-                    res.json("400, Unexpected error has occured!");
-                }else {
-                    res.json("403, Invalid credentials... please relogin to your account!");
+                if (PlayerDataPassword === "fail-split-unexpected error has occurred") {
+                    res.status(400).json("Unexpected error has occurred!");
+                } else {
+                    res.status(403).json("Invalid credentials... please relogin to your account!");
                 }
             } else {
                 const PlayerData = await getPlayerDataByName(Name);
-                const dataValue = PlayerData[0].data;
+                const dataObject = JSON.parse(PlayerData);
+                const dataValue = dataObject[0].data;
                 res.json(dataValue);
             }
         } else {
