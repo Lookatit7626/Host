@@ -208,7 +208,7 @@ app.post('/data/post/playerdata', async (req, res) => {
                 }
             } else {
                 const PlayerData = await getPlayerDataByName(Name);
-                res.json(PlayerData.slice(1, -1));
+                res.json(PlayerData);
             }
         } else {
             res.json("Player does not exist!");
