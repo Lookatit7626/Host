@@ -83,11 +83,10 @@ async function getPlayerPassword(playerName) {
         `;
         const result = await client.query(selectQuery, [playerName]);
         if (result.rows.length === 0) {
-            console.log('Fail-SPLIT-No player data found for the specified name.');
-            return 'fail-SPLIT-No player data found for the specified name.';
+            return 'fail-split-unexpected error has occured';
         } else {
             console.table(`Success-SPLIT-${result.rows}`);
-            return `Success-SPLIT-${result.rows[0].password}`;
+            return `${result.rows[0].password}`;
         }
     } finally {
         client.release();
@@ -178,9 +177,12 @@ app.post('/data/post/playerdata', async (req, res) => {
 
         if (exists) {
             const PlayerDataPassword = await getPlayerPassword(Name);
-
             if (Password !== PlayerDataPassword) {
-                res.json("403, Invalid credentials... please relogin to your account!");
+                if (PlayerDataPassword === "fail-split-unexpected error has occured") {
+                    res.json("400, Unexpected error has occured!");
+                }else {
+                    res.json("403, Invalid credentials... please relogin to your account!");
+                }
             } else {
                 const PlayerData = await getPlayerDataByName(Name);
                 res.json(PlayerData);
