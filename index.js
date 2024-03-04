@@ -185,9 +185,7 @@ app.post('/data/post/playerdata', async (req, res) => {
                 }
             } else {
                 const PlayerData = await getPlayerDataByName(Name);
-                const dataObject = JSON.parse(PlayerData);
-                const dataValue = dataObject[0].data;
-                res.json(dataValue);
+                res.json(PlayerData);
             }
         } else {
             res.json("Player does not exist!");
@@ -197,6 +195,7 @@ app.post('/data/post/playerdata', async (req, res) => {
         res.status(500).json("An error has occurred while receiving data! (Bad argument)");
     }
 });
+
 
 app.post('/data/post/createprofile', async (req, res) => {
     try {
