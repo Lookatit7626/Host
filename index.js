@@ -172,6 +172,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/data/post/playerdata', async (req, res) => {
     try {
         const { Name, Password } = req.body;
+
+        // Use await with all asynchronous functions
         const exists = await doesPlayerExist(Name);
 
         if (exists) {
@@ -231,20 +233,6 @@ app.get('/test/500', (req, res) => {
 app.get('/test/get', (req, res) => {
     const data = { message: 'GET request received successfully!' };
     res.json(data);
-});
-
-app.post('/test/post', (req, res) => {
-    try {
-
-      const receivedData = req.body;
-      const responseData = { message: 'POST request received successfully!', receivedData };
-      res.json(responseData);
-
-    } catch (error) {
-
-      const errorNumber = 500; // You can customize this based on your application's error codes
-        error500(res)
-    }
 });
 
 app.use((req, res, next) => {
