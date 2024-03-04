@@ -203,7 +203,7 @@ app.post('/data/post/createprofile', async (req, res) => {
         } else if (results === "Player with the same name already exists.") {
             res.status(200).json("Must not be used before");
         }
-
+        res.status(200).json(`Created the account : ${Name}`);
         console.log(`Name : ${Name}, Password ${Password}`);
     } catch (error) {
         console.error(error);
