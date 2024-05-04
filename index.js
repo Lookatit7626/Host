@@ -1,298 +1,99 @@
-const bodyParser = require('body-parser');
-const express = require('express');
-const { Pool } = require('pg');
+console.log('index.js');
+var http = require('http');
+const mySecret = process.env['Token']
 
-const connectionString = process.env.TestProGresPost1Link;
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Back-end');
+}).listen(8080);
 
-const pool = new Pool({
-    connectionString: connectionString,
-});
+const { exec } = require("child_process");
+const fs = require('node:fs');
+const path = require('node:path');
+const { ActivityType, Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 
-async function doesTableExist(tableName) {
-    const client = await pool.connect();
-    try {
-        const result = await client.query(
-            `SELECT EXISTS (
-                SELECT 1
-                FROM   information_schema.tables
-                WHERE  table_name = $1
-            );`,
-            [tableName]
-        );
-        return result.rows[0].exists;
-    } finally {
-        client.release();
-    }
+const client = new Client({
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.MessageContent,
+    ]
+})
+
+SetStatMode = 3
+SetActMode = 1
+Description = "you sleep :)"
+
+client.commands = new Collection();
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	client.commands.set(command.data.name, command);
 }
 
-async function createPlayersTable() {
-    const client = await pool.connect();
-    try {
-        const tableExists = await doesTableExist("playerdata");
-        if (!tableExists) {
-            const createTableQuery = `
-                CREATE TABLE playerdata (
-                    PlayerName VARCHAR,
-                    Password VARCHAR,
-                    Data VARCHAR,
-                    HWID VARCHAR
-                );
-            `;
-            await client.query(createTableQuery);
-            console.log('The "playerdata" table has been created successfully.');
-        } else {
-            console.log('The "playerdata" table already exists.');
-        }
-    } finally {
-        client.release();
+client.once(Events.ClientReady, () => {
+	console.log('Reloading Slash applications...');
+  
+  exec("node deploy-commands.js", (error, stdout, stderr) => {
+    if (error) {
+        console.log(`error: ${error.message}`);
+        return;
     }
-}
-
-createPlayersTable().catch((error) => {
-    console.error('Error checking or creating "playerdata" table:', error);
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+    console.log(`stdout: \n${stdout}`);
+  });
+  switch(SetActMode) {
+  case 1:
+    client.user.setActivity(Description, { type: ActivityType.Watching     });
+    break;
+  case 2:
+    client.user.setActivity(Description, { type: ActivityType.Listening     });
+    break;
+  default:
+    client.user.setActivity(Description, { type: ActivityType.Competing    });
+  }
+  switch(SetStatMode) {
+  case 1:
+    client.user.setStatus('online');
+    break;
+  case 2:
+    client.user.setStatus('idle');
+    break;
+  case 3:
+    client.user.setStatus('dnd');
+    break;
+  default:
+    client.user.setStatus('invisible');
+  }
 });
 
-async function getPlayerDataByName(playerName) {
-    const client = await pool.connect();
-    try {
-        const selectQuery = `
-            SELECT *
-            FROM playerdata
-            WHERE PlayerName = $1;
-        `;
-        const result = await client.query(selectQuery, [playerName]);
-        if (result.rows.length === 0) {
-            console.log('Fail-SPLIT-No player data found for the specified name.');
-            return 'fail-SPLIT-No player data found for the specified name.';
-        } else {
-            console.table(`Success-SPLIT-${result.rows}`);
-            return result.rows[0].data;
-        }
-    } finally {
-        client.release();
-    }
-}
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isChatInputCommand()) return;
 
-async function getPlayerPassword(playerName) {
-    const client = await pool.connect();
-    try {
-        const selectQuery = `
-            SELECT Password
-            FROM playerdata
-            WHERE PlayerName = $1;
-        `;
-        const result = await client.query(selectQuery, [playerName]);
-        if (result.rows.length === 0) {
-            return 'fail-split-unexpected error has occured';
-        } else {
-            console.table(`Success-SPLIT-${result.rows}`);
-            return `${result.rows[0].password}`;
-        }
-    } finally {
-        client.release();
-    }
-}
+	const command = client.commands.get(interaction.commandName);
 
-async function doesPlayerExist(playerName) {
-    const client = await pool.connect();
-    try {
-        const selectQuery = `
-            SELECT EXISTS (
-                SELECT 1
-                FROM playerdata
-                WHERE PlayerName = $1
-            );
-        `;
-        const result = await client.query(selectQuery, [playerName]);
-        return result.rows[0].exists;
-    } finally {
-        client.release();
-    }
-}
+	if (!command) return;
 
-async function checkDuplicateHWID(HWIDToCheck) {
-    const client = await pool.connect();
-    try {
-        const selectQuery = `
-            SELECT HWID, COUNT(HWID) AS nameCount
-            FROM playerdata
-            WHERE HWID = $1
-            GROUP BY HWID
-            HAVING COUNT(HWID) > 3;
-        `;
-        const result = await client.query(selectQuery, [HWIDToCheck]);
-        console.table(result.rows);
-        return result.rows.length > 0;
-    } finally {
-        client.release();
-    }
-}
-
-async function createPlayerData(playerName, password, data, HWID) {
-    const client = await pool.connect();
-    try {
-        // Check if the HWID limit is exceeded
-        const isExceededLimit = await checkDuplicateHWID(HWID);
-
-        // Check if the player name already exists
-        const doesExist = await doesPlayerExist(playerName);
-
-        if (isExceededLimit || doesExist) {
-            // Return a response indicating the error
-            const errorMessage = isExceededLimit
-                ? "Exceeded HWID limit"
-                : "Player with the same name already exists.";
-            console.log(errorMessage);
-            return errorMessage;
-        }
-
-        // If conditions are met, proceed with creating player data
-        const insertQuery = `
-            INSERT INTO playerdata (PlayerName, Password, Data, HWID)
-            VALUES ($1, $2, $3, $4)
-            RETURNING *;
-        `;
-        const result = await client.query(insertQuery, [playerName, password, data, HWID]);
-        console.table(result.rows);
-
-        // Return a success message or data if needed
-        return `Player data created successfully: ${JSON.stringify(result.rows)}`;
-    } finally {
-        client.release();
-    }
-}
-
-async function updatePlayerData(playerName, newData) {
-    const client = await pool.connect();
-    try {
-        const updateQuery = `
-            UPDATE playerdata
-            SET data = $1
-            WHERE PlayerName = $2
-            RETURNING *;
-        `;
-        const result = await client.query(updateQuery, [newData, playerName]);
-
-        if (result.rows.length === 0) {
-            console.log(`Player data not updated. No player found with the name: ${playerName}`);
-            return 'fail-SPLIT-No player found for the specified name.';
-        } else {
-            console.table(`Player data updated successfully for ${playerName}`);
-            return 'success-SPLIT-Player data updated successfully.';
-        }
-    } finally {
-        client.release();
-    }
-}
-
-const app = express();
-const port = 4000;
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-app.post('/data/post/playerdata', async (req, res) => {
-    try {
-        const { Name, Password } = req.body;
-
-        // Use await with all asynchronous functions
-        const exists = await doesPlayerExist(Name);
-
-        if (exists) {
-            const PlayerDataPassword = await getPlayerPassword(Name);
-            if (Password !== PlayerDataPassword) {
-                if (PlayerDataPassword === "fail-split-unexpected error has occurred") {
-                    res.status(400).json("Unexpected error has occurred!");
-                } else {
-                    res.status(403).json("Invalid credentials... please relogin to your account!");
-                }
-            } else {
-                const PlayerData = await getPlayerDataByName(Name);
-                res.json(PlayerData);
-            }
-        } else {
-            res.json("Player does not exist!");
-        }
-    } catch (error) {
-        console.error('An error occurred while receiving data!', error);
-        res.status(500).json("An error has occurred while receiving data! (Bad argument)");
-    }
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+	}
 });
 
-app.post('/data/post/editdata', async (req, res) => {
-    try {
-        const { Name, Password, Data } = req.body;
+// Log In our bot
+client.login(mySecret);
+// logging in, commands
 
-        // Use await with all asynchronous functions
-        const exists = await doesPlayerExist(Name);
-
-        if (exists) {
-            const PlayerDataPassword = await getPlayerPassword(Name);
-            if (Password !== PlayerDataPassword) {
-                if (PlayerDataPassword === "fail-split-unexpected error has occurred") {
-                    res.status(400).json("Unexpected error has occurred!");
-                } else {
-                    res.status(403).json("Invalid credentials... please relogin to your account!");
-                }
-            } else {
-                updatePlayerData(Name, Data)
-                res.json("Updated data");
-            }
-        } else {
-            res.json("Player does not exist!");
-        }
-    } catch (error) {
-        console.error('An error occurred while receiving data!', error);
-        res.status(500).json("An error has occurred while receiving data! (Bad argument)");
-    }
-});
-
-
-app.post('/data/post/createprofile', async (req, res) => {
-    try {
-        const { Name, Password, HWID } = req.body;
-
-        const results = await createPlayerData(Name, Password, '', HWID);
-
-        if (results === "Exceeded HWID limit") {
-            res.status(200).json("exceeded HWID limit");
-        } else if (results === "Player with the same name already exists.") {
-            res.status(200).json("Must not be used before");
-        }
-        res.status(200).json(`Created the account : ${Name}`);
-        console.log(`Name : ${Name}, Password ${Password}`);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json("An error has occurred while creating a profile!");
-    }
-});
-
-app.get('/', (req, res) => {
-    const data = { message: 'GET request received successfully!' };
-    res.json(data);
-});
-
-app.get('/test/403', (req, res) => {
-    error403(res);
-});
-
-app.get('/test/404', (req, res) => {
-    error404(res);
-});
-
-app.get('/test/500', (req, res) => {
-    error500(res);
-});
-
-app.get('/test/get', (req, res) => {
-    const data = { message: 'GET request received successfully!' };
-    res.json(data);
-});
-
-app.use((req, res, next) => {
-    error404(res)
-});
-
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+client.on('messageCreate', msg => {
+  if (msg.content === 'Hello') {
+    msg.reply(`Hello ${msg.author.username}`);
+  }
 });
