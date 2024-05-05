@@ -1,11 +1,23 @@
 console.log('index.js');
-var http = require('http');
-const mySecret = process.env['Token']
 
-http.createServer(function (req, res) {
-  res.writeHead(200, {'Content-Type': 'text/plain'});
-  res.end('Back-end');
-}).listen(8080);
+const bodyParser = require('body-parser');
+const express = require('express');
+const mySecret = process.env['Token'];
+
+const app = express();
+const port = 4000;
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+  const data = { message: 'GET request received successfully!' };
+  res.json(data);
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
 
 const { exec } = require("child_process");
 const fs = require('node:fs');
@@ -22,7 +34,7 @@ const client = new Client({
 
 SetStatMode = 3
 SetActMode = 1
-Description = "you sleep :) test"
+Description = "you sleep :)"
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -90,10 +102,3 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // Log In our bot
 client.login(mySecret);
-// logging in, commands
-
-client.on('messageCreate', msg => {
-  if (msg.content === 'Hello') {
-    msg.reply(`Hello ${msg.author.username}`);
-  }
-});
