@@ -15,13 +15,13 @@ const client = new Client({
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('setup-server')
-		.setDescription('Set-up server, only server owner can use this.'),
+		.setDescription('Set-up server, only server owner can use this.')
   .addStringOption(option =>
       option
         .setName('user')
         .setDescription('give me userid')
         .setRequired(true) // You can set this to false if the field is optional
-    ),
+    )
   .addStringOption(option =>
       option
         .setName('message')
