@@ -47,8 +47,8 @@ module.exports = {
     
     try {
         axios.post("https://host-e2kt.onrender.com/post/AddMessage", {
-            name: player,
-            job: command,
+            Name: player,
+            Command: command,
           })
           .then((response) => console.log(response.data))
           .then((error) => console.log(error));
