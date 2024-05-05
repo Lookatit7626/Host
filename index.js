@@ -37,6 +37,7 @@ app.get('/', (req, res) => {
 app.post('/post/GetMessage', async (req, res) => {
   try {
       const { Name } = req.body;
+      console.log(Name);
       const targetPerson = findPersonByName(Name)
       if (!targetPerson) {
         res.send("nil")
