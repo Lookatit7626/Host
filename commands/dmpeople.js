@@ -42,12 +42,12 @@ module.exports = {
       await interaction.reply({content:'Null', ephemeral: true });
       return "Avoid"
     }//await interaction.reply({content:'teh tarik', ephemeral: true });
-    const user = await client.members.cache.get(userId);
+    const userrr = await client.users.fetch(userId);
 		
     console.log('CHECKING...!');
-    if (user) {
+    if (userrr) {
       console.log('USER FOUND!');
-      await user.send(message);
+      await userrr.send(message);
       await interaction.reply({content:`DM sent to <@${userId}>!`, ephemeral: true });
     } else {
       console.log('NO USER FOUND!');
