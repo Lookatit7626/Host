@@ -1,11 +1,30 @@
 console.log('index.js');
 
 const bodyParser = require('body-parser');
+const axios = require('axios');
 const express = require('express');
 const mySecret = process.env['Token'];
 
 const app = express();
 const port = 8080;
+
+let ListofPeople = [
+];
+
+function AddingPeople(Name,Command) {
+  ListofPeople.push({
+    Name: Name,
+    Command: Command,
+  });
+}
+
+const removePersonByName = (name) => {
+  ListofPeople = ListofPeople.filter(person => person.Name !== name);
+};
+
+const findPersonByName = (Name) => {
+  return ListofPeople.find(person => person.Name === Name);
+};
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -13,6 +32,43 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   const data = { message: 'GET request received successfully!' };
   res.json(data);
+});
+
+app.post('/post/GetMessage', async (req, res) => {
+  try {
+      const { Name } = req.body;
+      const targetPerson = findPersonByName(Name)
+      if (!targetPerson) {
+        res.send("nil")
+      } else {
+        const CommandMessage = targetPerson.Command;
+        removePersonByName(Name)
+        res.send(CommandMessage)
+      }
+
+  } catch (error) {
+      console.error('An error occurred while receiving data!', error);
+      res.status(500).json("An error has occurred while receiving data! (Bad argument)");
+  }
+});
+
+app.post('/post/AddMessage', async (req, res) => {
+  try {
+      const { Name, Command } = req.body;
+      const targetPerson = findPersonByName(Name);
+      if (!targetPerson) {
+        AddingPeople(Name, Command);
+        res.send("Added Player command message!");
+      } else {
+        removePersonByName(Name);
+        AddingPeople(Name, Command);
+        res.send("Changed Player command message!");
+      }
+
+  } catch (error) {
+      console.error('An error occurred while receiving data!', error);
+      res.status(500).json("An error has occurred while receiving data! (Bad argument)");
+  }
 });
 
 app.listen(port, () => {
