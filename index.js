@@ -22,7 +22,7 @@ const client = new Client({
 
 SetStatMode = 3
 SetActMode = 1
-Description = "you sleep :)"
+Description = "you sleep :) test"
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
