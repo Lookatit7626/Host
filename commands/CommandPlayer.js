@@ -49,9 +49,7 @@ module.exports = {
         axios.post("https://host-e2kt.onrender.com/post/AddMessage", {
             Name: player,
             Command: command,
-          })
-          .then((response) => console.log(response.data))
-          .then((error) => console.log(error));
+          });
           await interaction.reply({content:'hmm (1)', ephemeral: true });
     } catch (error) {
         await interaction.reply({content:'hmm', ephemeral: true });
