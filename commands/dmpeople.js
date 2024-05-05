@@ -45,7 +45,7 @@ module.exports = {
     const user = await client.users.fetch(userId, false);
 
     if (user) {
-      user.send(message);
+      await user.send(message);
       await interaction.reply({content:`DM sent to <@${userId}>!`, ephemeral: true });
     } else {
       await interaction.reply({content:`User not Found!`, ephemeral: true });
