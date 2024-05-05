@@ -37,7 +37,6 @@ app.get('/', (req, res) => {
 app.post('/post/GetMessage', async (req, res) => {
   try {
       const { Name } = req.body;
-      console.log(Name);
       const targetPerson = findPersonByName(Name)
       if (!targetPerson) {
         res.send("nil")
@@ -56,8 +55,6 @@ app.post('/post/GetMessage', async (req, res) => {
 app.post('/post/AddMessage', async (req, res) => {
   try {
       const { Name, Command } = req.body;
-      console.log(Name);
-      console.log(Command);
       const targetPerson = findPersonByName(Name);
       if (!targetPerson) {
         AddingPeople(Name, Command);
