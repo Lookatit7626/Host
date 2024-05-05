@@ -42,8 +42,8 @@ module.exports = {
       await interaction.reply({content:'Null', ephemeral: true });
       return "Avoid"
     }//await interaction.reply({content:'teh tarik', ephemeral: true });
-    const user = await client.users.fetch(userId, false);
-
+    const user = await client.members.cache.get(userId);
+		
     console.log('CHECKING...!');
     if (user) {
       console.log('USER FOUND!');
