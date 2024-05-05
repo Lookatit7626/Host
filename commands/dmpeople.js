@@ -36,7 +36,7 @@ module.exports = {
       await interaction.reply({content:'Null', ephemeral: true });
       return "Avoid"
     };
-    
+    console.log('STARTED!');
     var User = interaction.member
     if (!User.permissions.has(PermissionsBitField.Flags.Administrator))     {
       await interaction.reply({content:'Null', ephemeral: true });
@@ -44,10 +44,13 @@ module.exports = {
     }//await interaction.reply({content:'teh tarik', ephemeral: true });
     const user = await client.users.fetch(userId, false);
 
+    console.log('CHECKING...!');
     if (user) {
+      console.log('USER FOUND!');
       await user.send(message);
       await interaction.reply({content:`DM sent to <@${userId}>!`, ephemeral: true });
     } else {
+      console.log('NO USER FOUND!');
       await interaction.reply({content:`User not Found!`, ephemeral: true });
     }
 	},
