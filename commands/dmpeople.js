@@ -1,4 +1,4 @@
-console.log('Setup-Server.js');
+console.log('Dm People.js');
 const { GatewayIntentBits,SlashCommandBuilder, ChannelType, PermissionsBitField, Client } = require('discord.js');
 
 function wait(ms) {
@@ -14,8 +14,8 @@ const client = new Client({
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('setup-server')
-		.setDescription('Set-up server, only server owner can use this.')
+		.setName('dm-someone')
+		.setDescription('use me to dm someone using their userid')
   .addStringOption(option =>
       option
         .setName('user')
