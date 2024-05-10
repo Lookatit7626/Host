@@ -19,15 +19,15 @@ function AddingPeople(Name,Command) {
 }
 
 function error403(res) {
-  res.status(403).sendFile('error403.html');
+  res.status(403).sendFile('error403.html', { root: __dirname });
 };
 
 function error404(res) {
-  res.status(404).sendFile('error404.html');
+  res.status(404).sendFile('error404.html', { root: __dirname });
 };
 
 function error500(res) {
-  res.status(500).sendFile('error500.html');
+  res.status(500).sendFile('error500.html', { root: __dirname });
 };
 
 const removePersonByName = (name) => {
