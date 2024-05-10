@@ -72,13 +72,7 @@ app.post('/post/AddMessage', async (req, res) => {
 });
 
 app.get('*', function(req, res){
-  res.sendFile('error404.html', options, function (err) {
-    if (err) {
-        console.log(err);
-    } else {
-        console.log('Sent:', fileName);
-    }
-});
+  res.sendFile('error404.html');
 });
 
 app.listen(port, () => {
