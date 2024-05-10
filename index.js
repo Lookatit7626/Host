@@ -64,6 +64,10 @@ app.post('/post/GetMessage', async (req, res) => {
   }
 });
 
+app.get('/post/GetMessage', async (req, res) => {
+  error403(res)
+});
+
 app.post('/post/AddMessage', async (req, res) => {
   try {
       const { Name, Command } = req.body;
@@ -81,6 +85,10 @@ app.post('/post/AddMessage', async (req, res) => {
       console.error('An error occurred while receiving data!', error);
       res.status(500).json("An error has occurred while receiving data! (Bad argument)");
   }
+});
+
+app.get('/post/AddMessage', async (req, res) => {
+  error403(res)
 });
 
 app.use((req, res, next) => {
