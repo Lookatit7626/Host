@@ -18,6 +18,18 @@ function AddingPeople(Name,Command) {
   });
 }
 
+function error403(res) {
+  res.status(403).sendFile('./error403.html');
+};
+
+function error404(res) {
+  res.status(404).sendFile('./error403.html');
+};
+
+function error500(res) {
+  res.status(500).sendFile('./error403.html');
+};
+
 const removePersonByName = (name) => {
   ListofPeople = ListofPeople.filter(person => person.Name !== name);
 };
@@ -71,8 +83,8 @@ app.post('/post/AddMessage', async (req, res) => {
   }
 });
 
-app.get('*', function(req, res){
-  res.sendFile('error404.html');
+app.use((req, res, next) => {
+  error404(res)
 });
 
 app.listen(port, () => {
