@@ -13,10 +13,9 @@ const twitterConfig = {
 };
 
 const discordWebhookUrl = process.env['WEBHOOKAPI'];
-const twitterAccount = '@TODAYonline';
 const twitterClient = new Twit(twitterConfig);
 
-const stream = twitterClient.stream('statuses/filter', { follow: twitterAccount });
+const stream = twitterClient.stream('statuses/filter', { follow: '@TODAYonline' });
 
 stream.on('tweet', (tweet) => {
   const tweetUrl = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
