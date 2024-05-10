@@ -13,7 +13,7 @@ const twitterConfig = {
 };
 
 const discordWebhookUrl = process.env['WEBHOOKAPI'];
-const twitterAccount = 'mamajoe23241';
+const twitterAccount = 'TODAYonline';
 const twitterClient = new Twit(twitterConfig);
 
 const stream = twitterClient.stream('statuses/filter', { follow: twitterAccount });
