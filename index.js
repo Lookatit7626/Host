@@ -71,6 +71,16 @@ app.post('/post/AddMessage', async (req, res) => {
   }
 });
 
+app.get('*', function(req, res){
+  res.sendFile('error404.html', options, function (err) {
+    if (err) {
+        console.log(err);
+    } else {
+        console.log('Sent:', fileName);
+    }
+});
+});
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });
