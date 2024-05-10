@@ -1,10 +1,13 @@
 console.log('index.js');
 
-const Twit = require('twit');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const express = require('express');
 const mySecret = process.env['Token'];
+
+/*
+const Twit = require('twit');
+
 const twitterConfig = {
   consumer_key: process.env['CONSUMERAPIKEY'],
   consumer_secret: process.env['CONSUMERAPIKEYSECRET'],
@@ -30,6 +33,7 @@ stream.on('tweet', (tweet) => {
 stream.on('error', (error) => {
   console.error('Twitter stream error:', error);
 });
+*/
 
 const app = express();
 const port = 8080;
