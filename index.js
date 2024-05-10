@@ -1,9 +1,36 @@
 console.log('index.js');
 
+const Twit = require('twit');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const express = require('express');
 const mySecret = process.env['Token'];
+const twitterConfig = {
+  consumer_key: process.env['CONSUMERAPIKEY'],
+  consumer_secret: process.env['CONSUMERAPIKEYSECRET'],
+  access_token: process.env['ACCESSTOKEN'],
+  access_token_secret: process.env['ACCESSTOKENSECRET'],
+};
+
+const discordWebhookUrl = process.env['WEBHOOKAPI'];
+const twitterAccount = 'mamajoe23241';
+const twitterClient = new Twit(twitterConfig);
+
+const stream = twitterClient.stream('statuses/filter', { follow: twitterAccount });
+
+stream.on('tweet', (tweet) => {
+  const tweetUrl = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+  
+  // Send the tweet URL to Discord webhook
+  axios.post(discordWebhookUrl, { content: tweetUrl })
+    .then(() => console.log('Tweet URL sent to Discord'))
+    .catch((error) => console.error('Error sending tweet URL to Discord:', error));
+});
+
+// Log errors
+stream.on('error', (error) => {
+  console.error('Twitter stream error:', error);
+});
 
 const app = express();
 const port = 8080;
