@@ -22,7 +22,7 @@ module.exports = {
 
     const password = interaction.options.getString('password');
     if (password == PasswordReal) {
-      await interaction.reply({content:'[ https://find-and-update.company-information.service.gov.uk/company/05927579/filing-history ] KIFARU TRAVEL LIMITED DOCUMENTS\nName : Grant Micheal Bowdery\nBorn in : 12 April 1977, In : Johannesburg!', ephemeral: true });
+      await interaction.reply({content:'[ https://find-and-update.company-information.service.gov.uk/company/05927579/filing-history ]\n KIFARU TRAVEL LIMITED DOCUMENTS\nName : Grant Micheal Bowdery\nBorn in : 12 April 1977, In : Johannesburg!\nAddress : 21 Brendon Way, Rustington, West Sussex, BN16 3PN', ephemeral: true });
     }else{
       await interaction.reply({content:'Invalid!', ephemeral: false });
     }
