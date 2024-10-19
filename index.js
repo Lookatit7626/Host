@@ -113,7 +113,7 @@ app.post('/post/AddMessage', async (req, res) => {
   try {
       const { Name, Command } = req.body;
       const targetPerson = findPersonByName(Name);
-      if (targetPerson == "All") {
+      if (Name == "All") {
         AllCommand = Command
         res.send("Added Player command message!");
         console.log("Added Command")
