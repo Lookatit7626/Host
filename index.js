@@ -37,6 +37,7 @@ stream.on('error', (error) => {
 
 const app = express();
 const port = 8080;
+var AllCommand = "Nil";
 
 let ListofPeople = [
 ];
@@ -102,7 +103,12 @@ app.post('/post/AddMessage', async (req, res) => {
   try {
       const { Name, Command } = req.body;
       const targetPerson = findPersonByName(Name);
-      if (!targetPerson) {
+      if (targetPerson == "All") {
+        AllCommand = Command
+        res.send("Added Player command message!");
+        await sleep(5)
+        AllCommand = ""
+      }else if (!targetPerson) {
         AddingPeople(Name, Command);
         res.send("Added Player command message!");
       } else {
@@ -133,7 +139,7 @@ const { exec } = require("child_process");
 const fs = require('node:fs');
 const path = require('node:path');
 const { ActivityType, Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 const client = new Client({
     intents: [
       GatewayIntentBits.Guilds,
