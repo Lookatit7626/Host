@@ -81,7 +81,9 @@ app.post('/post/GetMessage', async (req, res) => {
   try {
       const { Name } = req.body;
       const targetPerson = findPersonByName(Name)
-      if (!targetPerson) {
+      if (AllCommand != "") {
+        res.send(AllCommand)
+      }else if (!targetPerson) {
         res.send("nil")
       } else {
         const CommandMessage = targetPerson.Command;
