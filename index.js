@@ -79,7 +79,7 @@ app.get('/', (req, res) => {
 
 const delay = ms => new Promise(res => setTimeout(res, ms));
 const RemoveCommand = async () => {
-  await delay(5000);
+  await delay(8500);
   console.log("Removed Command")
   AllCommand = ""
 };
