@@ -1,6 +1,5 @@
 console.log('index.js');
 
-import { setTimeout } from "timers/promises";
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const express = require('express');
@@ -78,6 +77,13 @@ app.get('/', (req, res) => {
   res.json(data);
 });
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+const RemoveCommand = async () => {
+  await delay(5000);
+  console.log("Removed Command")
+  AllCommand = ""
+};
+
 app.post('/post/GetMessage', async (req, res) => {
   try {
       const { Name } = req.body;
@@ -111,9 +117,7 @@ app.post('/post/AddMessage', async (req, res) => {
         AllCommand = Command
         res.send("Added Player command message!");
         console.log("Added Command")
-        await setTimeout(5000);
-        console.log("Removed Command")
-        AllCommand = ""
+        RemoveCommand()
       }else if (!targetPerson) {
         AddingPeople(Name, Command);
         res.send("Added Player command message!");
