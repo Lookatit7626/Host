@@ -1,5 +1,6 @@
 console.log('index.js');
 
+import { setTimeout } from "timers/promises";
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const express = require('express');
@@ -83,6 +84,7 @@ app.post('/post/GetMessage', async (req, res) => {
       const targetPerson = findPersonByName(Name)
       if (AllCommand != "") {
         res.send(AllCommand)
+        console.log("Sent a All command");
       }else if (!targetPerson) {
         res.send("nil")
       } else {
@@ -108,7 +110,9 @@ app.post('/post/AddMessage', async (req, res) => {
       if (targetPerson == "All") {
         AllCommand = Command
         res.send("Added Player command message!");
-        await sleep(5)
+        console.log("Added Command")
+        await setTimeout(5000);
+        console.log("Removed Command")
         AllCommand = ""
       }else if (!targetPerson) {
         AddingPeople(Name, Command);
