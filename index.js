@@ -80,7 +80,7 @@ app.get('/', (req, res) => {
 function wait(milliseconds) {
   return new Promise(resolve => setTimeout(resolve, milliseconds));
 }
-async function RemoveCommand = async () => {
+async function RemoveCommand() {
   await wait(8500);
   console.log("Removed Command")
   AllCommand = ""
