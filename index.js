@@ -77,12 +77,15 @@ app.get('/', (req, res) => {
   res.json(data);
 });
 
-const delay = ms => new Promise(res => setTimeout(res, ms));
-const RemoveCommand = async () => {
-  await delay(8500);
+function wait(milliseconds) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+async function RemoveCommand = async () => {
+  await wait(8500);
   console.log("Removed Command")
   AllCommand = ""
 };
+
 
 app.post('/post/GetMessage', async (req, res) => {
   try {
