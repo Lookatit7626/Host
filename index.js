@@ -37,7 +37,7 @@ stream.on('error', (error) => {
 
 const app = express();
 const port = 8080;
-var AllCommand = "Nil";
+var AllCommand = "";
 
 let ListofPeople = [
 ];
@@ -115,6 +115,7 @@ app.post('/post/AddMessage', async (req, res) => {
       const targetPerson = findPersonByName(Name);
       if (Name == "All") {
         AllCommand = Command
+        console.log(Command)
         res.send("Added Player command message!");
         console.log("Added Command")
         RemoveCommand()
