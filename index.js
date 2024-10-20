@@ -94,6 +94,7 @@ app.post('/post/GetMessage', async (req, res) => {
       if (AllCommand != "") {
         res.send(AllCommand)
         console.log("Sent a All command");
+        console.log(Name)
       }else if (!targetPerson) {
         res.send("nil")
       } else {
