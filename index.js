@@ -70,9 +70,9 @@ const findPersonByName = (Name) => {
   return ListofPeople.find(person => person.Name === Name);
 };
 
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
   const data = { message: 'GET request received successfully!' };
