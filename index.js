@@ -159,6 +159,28 @@ app.post('/post/EnterMessage', async (req, res) => {
     }
 })
 
+ListOfPeopleThatUsedToday["NAME"] = {
+  "executor": "ECLIPSE",
+  "country" : "Taipei"
+};
+
+ListOfPeopleThatUsedToday["NAME1"] = {
+  "executor": "Test",
+  "country" : "Singapore"
+};
+ListOfPeopleThatUsedToday["NAME2"] = {
+  "executor": "Test",
+  "country" : "United States"
+};
+ListOfPeopleThatUsedToday["NAME3"] = {
+  "executor": "Tests",
+  "country" : "United Kingdom"
+};
+ListOfPeopleThatUsedToday["NAME4"] = {
+  "executor": "Test",
+  "country" : "Malaysia"
+};
+
 app.use((req, res, next) => {
   error404(res)
 });
@@ -193,28 +215,6 @@ for (const file of commandFiles) {
 	const command = require(filePath);
 	client.commands.set(command.data.name, command);
 }
-
-ListOfPeopleThatUsedToday["NAME"] = {
-  "executor": "ECLIPSE",
-  "country" : "Taipei"
-};
-
-ListOfPeopleThatUsedToday["NAME1"] = {
-  "executor": "Test",
-  "country" : "Singapore"
-};
-ListOfPeopleThatUsedToday["NAME2"] = {
-  "executor": "Test",
-  "country" : "United States"
-};
-ListOfPeopleThatUsedToday["NAME3"] = {
-  "executor": "Tests",
-  "country" : "United Kingdom"
-};
-ListOfPeopleThatUsedToday["NAME4"] = {
-  "executor": "Test",
-  "country" : "Malaysia"
-};
 
 function RUNNN() {
   console.log("RUNNNNNN")
@@ -287,6 +287,7 @@ function RUNNN() {
           channel.send({ embeds: [embed2] });
       }
   }
+  ListOfPeopleThatUsedToday = new Array()
 }
 
 let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN); // Please change it to 06:30:00 pls
