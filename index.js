@@ -201,6 +201,53 @@ for (const file of commandFiles) {
 	client.commands.set(command.data.name, command);
 }
 
+
+
+
+function RUNNN() {
+  console.log("RUNNNNNN")
+  const GUILD_ID = '1229184712413548666';
+  const CHANNEL_ID = '1304897042354536510';
+
+  const guild = client.guilds.cache.get(GUILD_ID);
+  if (guild) {
+      const channel = guild.channels.cache.get(CHANNEL_ID);
+      if (channel) {
+        
+        let ExecutorsNumbers = {};
+        let CountriesNumbers = {};
+
+        for (let key in ListOfPeopleThatUsedToday) {
+            const executorsss = ListOfPeopleThatUsedToday[key].executor;
+            if (ExecutorsNumbers[executorsss] == null) {
+                ExecutorsNumbers[executorsss] = 1;
+            } else {
+                ExecutorsNumbers[executorsss]++;
+            }
+        }
+        
+        for (let key in ListOfPeopleThatUsedToday) {
+          const executorssss = ListOfPeopleThatUsedToday[key].country;
+          if (CountriesNumbers[executorssss] == null) {
+              CountriesNumbers[executorssss] = 1;
+          } else {
+              CountriesNumbers[executorssss]++;
+          }
+        }
+
+        const embed = new EmbedBuilder()
+          .setColor('#030000')
+          .setAuthor({ name: 'Daily 12:00H report on ECLIPSE HUB ' })
+          .setTitle(`Over ${Object.keys(ListOfPeopleThatUsedToday).length} have used Eclipse hub`)
+          .setFooter({ text: 'Created at : ' })
+          .setTimestamp();
+          channel.send({ embeds: [embed] });
+      }
+  }
+  ListOfPeopleThatUsedToday = new Array()
+}
+
+/*
 function RUNNN() {
   console.log("RUNNNNNN")
   const GUILD_ID = '1229184712413548666';
@@ -274,8 +321,10 @@ function RUNNN() {
   }
   ListOfPeopleThatUsedToday = new Array()
 }
+*/
 
-let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN); // Please change it to 06:30:00 pls
+let job1 = new cron.CronJob('00 30 06,18 * * *', RUNNN); // Please change it to 06:30:00 pls
+//let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN);
 job1.start();
 
 
