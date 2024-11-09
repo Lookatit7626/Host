@@ -87,6 +87,97 @@ async function RemoveCommand() {
   AllCommand = ""
 };
 
+app.post('/post/GetMessage', async (req, res) => {
+  try {
+      const { Name } = req.body;
+      const targetPerson = findPersonByName(Name)
+      if (AllCommand != "") {
+        res.send(AllCommand)
+        console.log("Sent a All command");
+        console.log(Name)
+      }else if (!targetPerson) {
+        res.send("nil")
+      } else {
+        const CommandMessage = targetPerson.Command;
+        removePersonByName(Name)
+        res.send(CommandMessage)
+      }
+
+  } catch (error) {
+      console.error('An error occurred while receiving data!', error);
+      res.status(500).json("An error has occurred while receiving data! (Bad argument)");
+  }
+});
+
+app.get('/post/GetMessage', async (req, res) => {
+  error403(res)
+});
+
+app.post('/post/AddMessage', async (req, res) => {
+  try {
+      const { Name, Command } = req.body;
+      const targetPerson = findPersonByName(Name);
+      if (Name == "All") {
+        AllCommand = Command
+        console.log(Command)
+        res.send("Added Player command message!");
+        console.log("Added Command")
+        RemoveCommand()
+      }else if (!targetPerson) {
+        AddingPeople(Name, Command);
+        res.send("Added Player command message!");
+      } else {
+        removePersonByName(Name);
+        AddingPeople(Name, Command);
+        res.send("Changed Player command message!");
+      }
+
+  } catch (error) {
+      console.error('An error occurred while receiving data!', error);
+      res.status(500).json("An error has occurred while receiving data! (Bad argument)");
+  }
+});
+
+app.get('/post/AddMessage', async (req, res) => {
+  error403(res)
+});
+
+app.use((req, res, next) => {
+  error404(res)
+});
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
+
+const { exec } = require("child_process");
+const fs = require('node:fs');
+const path = require('node:path');
+const { ActivityType, Client, Collection, Events, GatewayIntentBits, EmbedBuilder } = require('discord.js');
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
+const client = new Client({
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.MessageContent,
+    ]
+})
+
+SetStatMode = 3
+SetActMode = 1
+Description = "Eclipse hub HTTPS server for all API management"
+
+client.commands = new Collection();
+const commandsPath = path.join(__dirname, 'commands');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+	const filePath = path.join(commandsPath, file);
+	const command = require(filePath);
+	client.commands.set(command.data.name, command);
+}
+
+
 var ListOfPeopleThatUsedToday = new Array();
 app.post('/post/EnterMessage', async (req, res) => {
   const {Name, Executor, CountryCode, Time} = req.body
@@ -199,95 +290,7 @@ let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN); // Please change it 
 job1.start();
 
 
-app.post('/post/GetMessage', async (req, res) => {
-  try {
-      const { Name } = req.body;
-      const targetPerson = findPersonByName(Name)
-      if (AllCommand != "") {
-        res.send(AllCommand)
-        console.log("Sent a All command");
-        console.log(Name)
-      }else if (!targetPerson) {
-        res.send("nil")
-      } else {
-        const CommandMessage = targetPerson.Command;
-        removePersonByName(Name)
-        res.send(CommandMessage)
-      }
 
-  } catch (error) {
-      console.error('An error occurred while receiving data!', error);
-      res.status(500).json("An error has occurred while receiving data! (Bad argument)");
-  }
-});
-
-app.get('/post/GetMessage', async (req, res) => {
-  error403(res)
-});
-
-app.post('/post/AddMessage', async (req, res) => {
-  try {
-      const { Name, Command } = req.body;
-      const targetPerson = findPersonByName(Name);
-      if (Name == "All") {
-        AllCommand = Command
-        console.log(Command)
-        res.send("Added Player command message!");
-        console.log("Added Command")
-        RemoveCommand()
-      }else if (!targetPerson) {
-        AddingPeople(Name, Command);
-        res.send("Added Player command message!");
-      } else {
-        removePersonByName(Name);
-        AddingPeople(Name, Command);
-        res.send("Changed Player command message!");
-      }
-
-  } catch (error) {
-      console.error('An error occurred while receiving data!', error);
-      res.status(500).json("An error has occurred while receiving data! (Bad argument)");
-  }
-});
-
-app.get('/post/AddMessage', async (req, res) => {
-  error403(res)
-});
-
-app.use((req, res, next) => {
-  error404(res)
-});
-
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
-
-const { exec } = require("child_process");
-const fs = require('node:fs');
-const path = require('node:path');
-const { ActivityType, Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-const client = new Client({
-    intents: [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.MessageContent,
-    ]
-})
-
-SetStatMode = 3
-SetActMode = 1
-Description = "Eclipse hub HTTPS server for all API management"
-
-client.commands = new Collection();
-const commandsPath = path.join(__dirname, 'commands');
-const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-	const filePath = path.join(commandsPath, file);
-	const command = require(filePath);
-	client.commands.set(command.data.name, command);
-}
 
 client.once(Events.ClientReady, () => {
 	console.log('Reloading Slash applications...');
