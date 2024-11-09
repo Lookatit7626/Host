@@ -39,7 +39,8 @@ module.exports = {
     Roles = interaction.guild.roles.cache
     const botMember = await guild.members.fetch(guild.members.me.id);
     BotRole = botMember.roles.highest;
-    
+    console.log(User.roles.highest.position);
+    console.log(BotRole.position);
     if (User.roles.highest.position <= BotRole.position) {
       await interaction.reply({content:'403 - Unauthorized access to command!', ephemeral: false });
       return "Avoid"
