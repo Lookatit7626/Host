@@ -135,7 +135,7 @@ function RUNNN() {
         let CountriesNumbers = {};
 
         for (let key in ListOfPeopleThatUsedToday) {
-            const executor = test[key].executor;
+            const executor = ListOfPeopleThatUsedToday[key].executor;
             if (ExecutorsNumbers[executor] == null) {
                 ExecutorsNumbers[executor] = 1;
             } else {
@@ -144,7 +144,7 @@ function RUNNN() {
         }
         
         for (let key in ListOfPeopleThatUsedToday) {
-          const executor = test[key].country;
+          const executor = ListOfPeopleThatUsedToday[key].country;
           if (CountriesNumbers[executor] == null) {
               CountriesNumbers[executor] = 1;
           } else {
