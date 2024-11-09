@@ -9,8 +9,8 @@ function wait(ms) {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('HTTPS SERVER')
-		.setDescription('send a https command to discord bot server for administrative purpose')
+		.setName('https-command')
+		.setDescription('only for developers - used to send commands to https server')
         .addStringOption(option =>
             option
               .setName('command')
