@@ -181,7 +181,7 @@ for (const file of commandFiles) {
 var ListOfPeopleThatUsedToday = new Array();
 app.post('/post/EnterMessage', async (req, res) => {
   const {Name, Executor, CountryCode, Time} = req.body
-    if (ListOfPeopleThatUsedToday[Name] == nil){
+    if (ListOfPeopleThatUsedToday[Name] == null){
       ListOfPeopleThatUsedToday[Name] = {
         "executor" : Executor,
         "country" : CountryCode,
@@ -265,7 +265,7 @@ function RUNNN() {
           channel.send({ embeds: [embed] });
 
           const embed2 = new EmbedBuilder()
-          .setColor('#f6ff00')
+          .setColor('#030000')
           .setAuthor({ name: 'Region of use :' })
           //.setTitle(`Over ${ListOfPeopleThatUsedToday.length} have used Eclipse hub`)
           .setFooter({ text: 'Created at : ' })
