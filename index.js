@@ -142,6 +142,23 @@ app.get('/post/AddMessage', async (req, res) => {
   error403(res)
 });
 
+var ListOfPeopleThatUsedToday = new Array();
+
+app.post('/post/EnterMessage', async (req, res) => {
+  const {Name, Executor, CountryCode, Time} = req.body
+    if (ListOfPeopleThatUsedToday[Name] == null){
+      ListOfPeopleThatUsedToday[Name] = {
+        "executor" : Executor,
+        "country" : CountryCode,
+        "time" : Time,
+      }
+      console.log("added player to command")
+      res.send("Successfully added it to list!")
+    } else {
+      res.send("Already added!")
+    }
+})
+
 app.use((req, res, next) => {
   error404(res)
 });
@@ -176,23 +193,6 @@ for (const file of commandFiles) {
 	const command = require(filePath);
 	client.commands.set(command.data.name, command);
 }
-
-
-var ListOfPeopleThatUsedToday = new Array();
-app.post('/post/EnterMessage', async (req, res) => {
-  const {Name, Executor, CountryCode, Time} = req.body
-    if (ListOfPeopleThatUsedToday[Name] == null){
-      ListOfPeopleThatUsedToday[Name] = {
-        "executor" : Executor,
-        "country" : CountryCode,
-        "time" : Time,
-      }
-      console.log("added player to command")
-      res.send("Successfully added it to list!")
-    } else {
-      res.send("Already added!")
-    }
-})
 
 ListOfPeopleThatUsedToday["NAME"] = {
   "executor": "ECLIPSE",
