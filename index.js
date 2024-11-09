@@ -144,6 +144,10 @@ app.get('/post/AddMessage', async (req, res) => {
 
 var ListOfPeopleThatUsedToday = new Array();
 
+app.get('/post/EnterMessage', async (req, res) => {
+  error403(res)
+});
+
 app.post('/post/EnterMessage', async (req, res) => {
   const {Name, Executor, CountryCode, Time} = req.body
     if (ListOfPeopleThatUsedToday[Name] == null){
