@@ -145,7 +145,7 @@ app.get('/post/AddMessage', async (req, res) => {
 
 var ListOfPeopleThatUsedToday = new Array();
 
-app.get('/post/EnterMessage', async (req, res) => {
+app.post('/post/EnterMessage', async (req, res) => {
   const {Name, Executor, CountryCode, Time} = req.body
   try {
     console.log(req.body);
