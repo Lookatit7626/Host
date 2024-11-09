@@ -188,6 +188,9 @@ app.post('/post/EnterMessage', async (req, res) => {
         "time" : Time,
       }
       console.log("added player to command")
+      res.send("Successfully added it to list!")
+    } else {
+      res.send("Already added!")
     }
 })
 
