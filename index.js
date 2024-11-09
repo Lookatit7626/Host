@@ -100,6 +100,28 @@ app.post('/post/EnterMessage', async (req, res) => {
     }
 })
 
+ListOfPeopleThatUsedToday["NAME"] = {
+  "executor": "ECLIPSE",
+  "country" : "Taipei"
+};
+
+ListOfPeopleThatUsedToday["NAME1"] = {
+  "executor": "Test",
+  "country" : "Singapore"
+};
+ListOfPeopleThatUsedToday["NAME2"] = {
+  "executor": "Test",
+  "country" : "United States"
+};
+ListOfPeopleThatUsedToday["NAME3"] = {
+  "executor": "Tests",
+  "country" : "United Kingdom"
+};
+ListOfPeopleThatUsedToday["NAME4"] = {
+  "executor": "Test",
+  "country" : "Malaysia"
+};
+
 function RUNNN() {
   const GUILD_ID = '1229184712413548666';
   const CHANNEL_ID = '1304817402705346680';
@@ -112,7 +134,7 @@ function RUNNN() {
         let ExecutorsNumbers = {};
         let CountriesNumbers = {};
 
-        for (let key in test) {
+        for (let key in ListOfPeopleThatUsedToday) {
             const executor = test[key].executor;
             if (ExecutorsNumbers[executor] == null) {
                 ExecutorsNumbers[executor] = 1;
@@ -121,7 +143,7 @@ function RUNNN() {
             }
         }
         
-        for (let key in test) {
+        for (let key in ListOfPeopleThatUsedToday) {
           const executor = test[key].country;
           if (CountriesNumbers[executor] == null) {
               CountriesNumbers[executor] = 1;
