@@ -227,20 +227,20 @@ function RUNNN() {
         let CountriesNumbers = {};
 
         for (let key in ListOfPeopleThatUsedToday) {
-            const executor = ListOfPeopleThatUsedToday[key].executor;
-            if (ExecutorsNumbers[executor] == null) {
-                ExecutorsNumbers[executor] = 1;
+            const executorsss = ListOfPeopleThatUsedToday[key].executor;
+            if (ExecutorsNumbers[executorsss] == null) {
+                ExecutorsNumbers[executorsss] = 1;
             } else {
-                ExecutorsNumbers[executor]++;
+                ExecutorsNumbers[executorsss]++;
             }
         }
         
         for (let key in ListOfPeopleThatUsedToday) {
-          const executor = ListOfPeopleThatUsedToday[key].country;
-          if (CountriesNumbers[executor] == null) {
-              CountriesNumbers[executor] = 1;
+          const executorssss = ListOfPeopleThatUsedToday[key].country;
+          if (CountriesNumbers[executorssss] == null) {
+              CountriesNumbers[executorssss] = 1;
           } else {
-              CountriesNumbers[executor]++;
+              CountriesNumbers[executorssss]++;
           }
         }
 
@@ -250,7 +250,7 @@ function RUNNN() {
           .setTitle(`Over ${ListOfPeopleThatUsedToday.length} have used Eclipse hub`)
           //.setFooter({ text: 'Created at : ' })
           //.setTimestamp();
-          if (ListOfPeopleThatUsedToday.length == 0) {
+          if (Object.keys(ListOfPeopleThatUsedToday).length == 0) {
             embed.addFields(
               { name: `**Executor : null**`, value: `executed 0 times`, inline: false },
             )
@@ -270,7 +270,7 @@ function RUNNN() {
           //.setTitle(`Over ${ListOfPeopleThatUsedToday.length} have used Eclipse hub`)
           .setFooter({ text: 'Created at : ' })
           .setTimestamp();
-          if (ListOfPeopleThatUsedToday.length == 0) {
+          if (CountriesNumbers.length == 0) {
             embed2.addFields(
               { name: `**Country : US**`, value: `0 people used it`, inline: false },
             )
