@@ -277,7 +277,7 @@ function RUNNN() {
           } else {
             for (const executor in CountriesNumbers) {
               embed2.addFields(
-                { name: `**Country : **${executor}`, value: `${ExecutorsNumbers[executor]} people have used it`, inline: false },
+                { name: `**In **${executor},`, value: `${CountriesNumbers[executor]} people have used it`, inline: false },
               )
             }
           }
