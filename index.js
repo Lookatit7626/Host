@@ -123,8 +123,9 @@ ListOfPeopleThatUsedToday["NAME4"] = {
 };
 
 function RUNNN() {
+  console.log("RUNNNNNN")
   const GUILD_ID = '1229184712413548666';
-  const CHANNEL_ID = '1304817402705346680';
+  const CHANNEL_ID = '1304897042354536510';
 
   const guild = client.guilds.cache.get(GUILD_ID);
   if (guild) {
