@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const express = require('express');
 const mySecret = process.env['Token'];
+const cron = require('cron');
 
 /*
 const Twit = require('twit');
@@ -86,6 +87,94 @@ async function RemoveCommand() {
   AllCommand = ""
 };
 
+var ListOfPeopleThatUsedToday = new Array();
+app.post('/post/EnterMessage', async (req, res) => {
+  const {Name, Executor, CountryCode, Time} = req.body
+    if (ListOfPeopleThatUsedToday[Name] == nil){
+      ListOfPeopleThatUsedToday[Name] = {
+        "executor" : Executor,
+        "country" : CountryCode,
+        "time" : Time,
+      }
+      console.log("added player to command")
+    }
+})
+
+function RUNNN() {
+  const GUILD_ID = '1229184712413548666';
+  const CHANNEL_ID = '1304817402705346680';
+
+  const guild = client.guilds.cache.get(GUILD_ID);
+  if (guild) {
+      const channel = guild.channels.cache.get(CHANNEL_ID);
+      if (channel) {
+        
+        let ExecutorsNumbers = {};
+        let CountriesNumbers = {};
+
+        for (let key in test) {
+            const executor = test[key].executor;
+            if (ExecutorsNumbers[executor] == null) {
+                ExecutorsNumbers[executor] = 1;
+            } else {
+                ExecutorsNumbers[executor]++;
+            }
+        }
+        
+        for (let key in test) {
+          const executor = test[key].country;
+          if (CountriesNumbers[executor] == null) {
+              CountriesNumbers[executor] = 1;
+          } else {
+              CountriesNumbers[executor]++;
+          }
+        }
+
+        const embed = new EmbedBuilder()
+          .setColor('#f6ff00')
+          .setAuthor({ name: 'Daily 12:00H report on ECLIPSE HUB ' })
+          .setTitle(`Over ${ListOfPeopleThatUsedToday.length} have used Eclipse hub`)
+          //.setFooter({ text: 'Created at : ' })
+          //.setTimestamp();
+          if (ListOfPeopleThatUsedToday.length == 0) {
+            embed.addFields(
+              { name: `**Executor : null**`, value: `executed 0 times`, inline: false },
+            )
+          } else {
+            for (const executor in ExecutorsNumbers) {
+              {console.log(`Executor "${executor}" executed ${ExecutorsNumbers[executor]} times.`)};
+              embed.addFields(
+                { name: `**Executor : **${executor}`, value: `executed ${ExecutorsNumbers[executor]} times`, inline: false },
+              )
+            }
+          }
+          channel.send({ embeds: [embed] });
+
+          const embed2 = new EmbedBuilder()
+          .setColor('#f6ff00')
+          .setAuthor({ name: 'Region of use :' })
+          //.setTitle(`Over ${ListOfPeopleThatUsedToday.length} have used Eclipse hub`)
+          .setFooter({ text: 'Created at : ' })
+          .setTimestamp();
+          if (ListOfPeopleThatUsedToday.length == 0) {
+            embed2.addFields(
+              { name: `**Country : US**`, value: `0 people used it`, inline: false },
+            )
+          } else {
+            for (const executor in CountriesNumbers) {
+              embed2.addFields(
+                { name: `**Country : **${executor}`, value: `${ExecutorsNumbers[executor]} people have used it`, inline: false },
+              )
+            }
+          }
+          channel.send({ embeds: [embed2] });
+      }
+  }
+}
+
+let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN); // Please change it to 06:30:00 pls
+job1.start();
+
 
 app.post('/post/GetMessage', async (req, res) => {
   try {
@@ -165,7 +254,7 @@ const client = new Client({
 
 SetStatMode = 3
 SetActMode = 1
-Description = "you sleep :)"
+Description = "Eclipse hub HTTPS server for all API management"
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
