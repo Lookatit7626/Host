@@ -19,7 +19,7 @@ const { exec } = require("child_process");
 	try {
 		console.log(`Started refreshing ${commands.length} application (/) commands.`);
 		const data = await rest.put(
-			Routes.applicationCommands("1081937404014895104"),
+			Routes.applicationCommands("1304814025875394633"),
 			{ body: commands },
 		);
 
