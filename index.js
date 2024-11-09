@@ -150,6 +150,7 @@ app.get('/post/EnterMessage', async (req, res) => {
 
 app.post('/post/EnterMessage', async (req, res) => {
   const {Name, Executor, CountryCode, Time} = req.body
+  try {
     if (ListOfPeopleThatUsedToday[Name] == null){
       ListOfPeopleThatUsedToday[Name] = {
         "executor" : Executor,
@@ -161,29 +162,10 @@ app.post('/post/EnterMessage', async (req, res) => {
     } else {
       res.send("Already added!")
     }
-})
-
-ListOfPeopleThatUsedToday["NAME"] = {
-  "executor": "ECLIPSE",
-  "country" : "Taipei"
-};
-
-ListOfPeopleThatUsedToday["NAME1"] = {
-  "executor": "Test",
-  "country" : "Singapore"
-};
-ListOfPeopleThatUsedToday["NAME2"] = {
-  "executor": "Test",
-  "country" : "United States"
-};
-ListOfPeopleThatUsedToday["NAME3"] = {
-  "executor": "Tests",
-  "country" : "United Kingdom"
-};
-ListOfPeopleThatUsedToday["NAME4"] = {
-  "executor": "Test",
-  "country" : "Malaysia"
-};
+  } catch {
+    res.send("There was an error [unexpected]");
+  }
+});
 
 app.use((req, res, next) => {
   error404(res)
@@ -259,7 +241,7 @@ function RUNNN() {
           //.setTimestamp();
           if (Object.keys(ListOfPeopleThatUsedToday).length == 0) {
             embed.addFields(
-              { name: `**Executor : null**`, value: `executed 0 times`, inline: false },
+              { name: `**Executor : All**`, value: `executed 0 times`, inline: false },
             )
           } else {
             for (const executor in ExecutorsNumbers) {
@@ -279,7 +261,7 @@ function RUNNN() {
           .setTimestamp();
           if (Object.keys(ListOfPeopleThatUsedToday).length == 0) {
             embed2.addFields(
-              { name: `**Country : US**`, value: `0 people used it`, inline: false },
+              { name: `**Country : All**`, value: `0 people used it`, inline: false },
             )
           } else {
             for (const executor in CountriesNumbers) {
