@@ -245,9 +245,9 @@ function RUNNN() {
         }
 
         const embed = new EmbedBuilder()
-          .setColor('#f6ff00')
+          .setColor('#030000')
           .setAuthor({ name: 'Daily 12:00H report on ECLIPSE HUB ' })
-          .setTitle(`Over ${ListOfPeopleThatUsedToday.length} have used Eclipse hub`)
+          .setTitle(`Over ${Object.keys(ListOfPeopleThatUsedToday).length} have used Eclipse hub`)
           //.setFooter({ text: 'Created at : ' })
           //.setTimestamp();
           if (Object.keys(ListOfPeopleThatUsedToday).length == 0) {
@@ -270,7 +270,7 @@ function RUNNN() {
           //.setTitle(`Over ${ListOfPeopleThatUsedToday.length} have used Eclipse hub`)
           .setFooter({ text: 'Created at : ' })
           .setTimestamp();
-          if (CountriesNumbers.length == 0) {
+          if (Object.keys(ListOfPeopleThatUsedToday).length == 0) {
             embed2.addFields(
               { name: `**Country : US**`, value: `0 people used it`, inline: false },
             )
