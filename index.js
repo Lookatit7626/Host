@@ -145,7 +145,7 @@ app.get('/post/AddMessage', async (req, res) => {
 
 var ListOfPeopleThatUsedToday = new Array();
 
-app.post('/post/EnterMessage', async (req, res) => {
+app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), async (req, res) => {
   console.log('Request Headers:', req.headers);  // Log headers to verify Content-Type
   console.log('Request Body:', req.body);        // Log the body to see if it's being parsed
   const {Name, Executor, CountryCode, Time} = req.body;
