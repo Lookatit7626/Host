@@ -147,6 +147,7 @@ var ListOfPeopleThatUsedToday = new Array();
 
 app.post('/post/EnterMessage', async (req, res) => {
   console.log('Request Headers:', req.headers);  // Log headers to verify Content-Type
+  console.log('Request : ', req)
   console.log('Request Body:', req.body);        // Log the body to see if it's being parsed
   const {Name, Executor, CountryCode, Time} = req.body;
   try {
@@ -202,53 +203,6 @@ for (const file of commandFiles) {
 	const command = require(filePath);
 	client.commands.set(command.data.name, command);
 }
-
-
-
-
-function RUNNN() {
-  console.log("RUNNNNNN")
-  const GUILD_ID = '1229184712413548666';
-  const CHANNEL_ID = '1304897042354536510';
-
-  const guild = client.guilds.cache.get(GUILD_ID);
-  if (guild) {
-      const channel = guild.channels.cache.get(CHANNEL_ID);
-      if (channel) {
-        
-        let ExecutorsNumbers = {};
-        let CountriesNumbers = {};
-
-        for (let key in ListOfPeopleThatUsedToday) {
-            const executorsss = ListOfPeopleThatUsedToday[key].executor;
-            if (ExecutorsNumbers[executorsss] == null) {
-                ExecutorsNumbers[executorsss] = 1;
-            } else {
-                ExecutorsNumbers[executorsss]++;
-            }
-        }
-        
-        for (let key in ListOfPeopleThatUsedToday) {
-          const executorssss = ListOfPeopleThatUsedToday[key].country;
-          if (CountriesNumbers[executorssss] == null) {
-              CountriesNumbers[executorssss] = 1;
-          } else {
-              CountriesNumbers[executorssss]++;
-          }
-        }
-
-        const embed = new EmbedBuilder()
-          .setColor('#030000')
-          .setAuthor({ name: 'Daily 12:00H report on ECLIPSE HUB ' })
-          .setTitle(`Over ${Object.keys(ListOfPeopleThatUsedToday).length} have used Eclipse hub`)
-          .setFooter({ text: 'Created at : ' })
-          .setTimestamp();
-          channel.send({ embeds: [embed] });
-      }
-  }
-  ListOfPeopleThatUsedToday = new Array()
-}
-
 
 function RUNNN() {
   console.log("RUNNNNNN")
