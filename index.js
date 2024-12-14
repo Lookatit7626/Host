@@ -147,7 +147,6 @@ var ListOfPeopleThatUsedToday = new Array();
 
 app.post('/post/EnterMessage', async (req, res) => {
   console.log('Request Headers:', req.headers);  // Log headers to verify Content-Type
-  console.log('Request : ', req)
   console.log('Request Body:', req.body);        // Log the body to see if it's being parsed
   const {Name, Executor, CountryCode, Time} = req.body;
   try {
