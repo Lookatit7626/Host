@@ -146,13 +146,12 @@ app.get('/post/AddMessage', async (req, res) => {
 var ListOfPeopleThatUsedToday = new Array();
 
 app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), async (req, res) => {
-  console.log('Request Headers:', req.headers);  // Log headers to verify Content-Type
-  console.log(req.body.toString('utf8'))
-  console.log('Request Body:', req.body);        // Log the body to see if it's being parsed
-  const {Name, Executor, CountryCode, Time} = req.body;
+  const parsedData = req.body;
+  if (contentType.includes('application/json') == false) {
+    parsedData = JSON.parse(req.body.toString('utf8'));
+  }
+  const {Name, Executor, CountryCode, Time} = parsedData;
   try {
-    console.log(req.body);
-    console.log(Name);
     if (ListOfPeopleThatUsedToday[Name] == null){
       ListOfPeopleThatUsedToday[Name] = {
         "executor" : Executor,
