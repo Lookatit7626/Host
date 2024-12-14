@@ -207,7 +207,7 @@ function RUNNN() {
 
         const embed = new EmbedBuilder()
           .setColor('#030000')
-          .setAuthor({ name: '06:30AM report on ECLIPSE HUB ' })
+          .setAuthor({ name: '18:30AM report on ECLIPSE HUB ' })
           .setTitle(`Over ${Object.keys(ListOfPeopleThatUsedToday).length} have used Eclipse hub`)
           //.setFooter({ text: 'Created at : ' })
           //.setTimestamp();
@@ -249,7 +249,7 @@ function RUNNN() {
 }
 
 
-let job1 = new cron.CronJob('00 30 06 * * *', RUNNN); // Please change it to 06:30:00 pls
+let job1 = new cron.CronJob('00 30 18 * * *', RUNNN); // Please change it to 06:30:00 pls
 //let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN);
 job1.start();
 
