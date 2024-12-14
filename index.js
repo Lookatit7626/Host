@@ -129,7 +129,7 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
         "country" : CountryCode,
         "time" : Time,
       }
-      console.log("added player to command")
+      console.log("added player to list")
       res.send("Successfully added it to list!")
     } else {
       res.send("Already added!")
@@ -175,7 +175,7 @@ for (const file of commandFiles) {
 }
 
 function RUNNN() {
-  console.log("RUNNNNNN")
+  console.log("0630")
   const GUILD_ID = '1229184712413548666';
   const CHANNEL_ID = '1304897042354536510';
 
@@ -207,7 +207,7 @@ function RUNNN() {
 
         const embed = new EmbedBuilder()
           .setColor('#030000')
-          .setAuthor({ name: 'Daily 12:00H report on ECLIPSE HUB ' })
+          .setAuthor({ name: '06:30AM report on ECLIPSE HUB ' })
           .setTitle(`Over ${Object.keys(ListOfPeopleThatUsedToday).length} have used Eclipse hub`)
           //.setFooter({ text: 'Created at : ' })
           //.setTimestamp();
@@ -249,8 +249,8 @@ function RUNNN() {
 }
 
 
-//let job1 = new cron.CronJob('00 30 06,18 * * *', RUNNN); // Please change it to 06:30:00 pls
-let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN);
+let job1 = new cron.CronJob('00 30 06 * * *', RUNNN); // Please change it to 06:30:00 pls
+//let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN);
 job1.start();
 
 
