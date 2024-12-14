@@ -6,36 +6,6 @@ const express = require('express');
 const mySecret = process.env['Token'];
 const cron = require('cron');
 
-/*
-const Twit = require('twit');
-
-const twitterConfig = {
-  consumer_key: process.env['CONSUMERAPIKEY'],
-  consumer_secret: process.env['CONSUMERAPIKEYSECRET'],
-  access_token: process.env['ACCESSTOKEN'],
-  access_token_secret: process.env['ACCESSTOKENSECRET'],
-};
-
-const discordWebhookUrl = process.env['WEBHOOKAPI'];
-const twitterClient = new Twit(twitterConfig);
-
-const stream = twitterClient.stream('statuses/filter', { follow: '@TODAYonline' });
-
-stream.on('tweet', (tweet) => {
-  const tweetUrl = `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
-  
-  // Send the tweet URL to Discord webhook
-  axios.post(discordWebhookUrl, { content: tweetUrl })
-    .then(() => console.log('Tweet URL sent to Discord'))
-    .catch((error) => console.error('Error sending tweet URL to Discord:', error));
-});
-
-// Log errors
-stream.on('error', (error) => {
-  console.error('Twitter stream error:', error);
-});
-*/
-
 const app = express();
 const port = 8080;
 var AllCommand = "";
@@ -146,7 +116,7 @@ app.get('/post/AddMessage', async (req, res) => {
 var ListOfPeopleThatUsedToday = new Array();
 
 app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), async (req, res) => {
-  const parsedData = req.body;
+  var parsedData = req.body;
   const contentType = req.get('Content-Type');
   if (contentType.includes('application/json') == false) {
     parsedData = JSON.parse(req.body.toString('utf8'));
