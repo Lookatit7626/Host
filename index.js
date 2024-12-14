@@ -129,7 +129,7 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
         "country" : CountryCode,
         "time" : Time,
       }
-      console.log("added player to list")
+      console.log(f`added ${Name} to list`)
       res.send("Successfully added it to list!")
     } else {
       res.send("Already added!")
