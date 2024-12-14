@@ -249,10 +249,8 @@ function RUNNN() {
 }
 
 
-let job1 = new cron.CronJob('00 30 18 * * *', RUNNN); // Please change it to 06:30:00 pls
-//let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN);
-job1.start();
-
+//let job1 = new cron.CronJob('00 30 18 * * *', RUNNN,null,true,'America/Los_Angeles'); // Please change it to 06:30:00 pls
+let job1 = new cron.CronJob('30 45 01-23 * * *', RUNNN,null,true,'America/New_York');
 
 
 
