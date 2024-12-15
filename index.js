@@ -127,7 +127,7 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
 
       const key = Object.keys(parsedData)[0]
       console.log(key)
-      parsedData = JSON.parse(keyss.toString('utf8'));
+      parsedData = JSON.parse(key.toString('utf8'));
     }
     const {Name, Executor, CountryCode, Time} = parsedData;
     try {
@@ -163,9 +163,9 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
           .setFooter({ text: 'Created at : ' })
           .setTimestamp();
           embed.addFields(
-            { name: `Error : `, value: `${errormess}`, inline: false },
+            { name: `Error Message : `, value: `${errormess}`, inline: false },
             { name: `Request body : `, value: `${req.body}`, inline: false },
-            { name: `Request CT : `, value: `${req.get('Content-Type')}`, inline: false },
+            { name: `Request Content-Type : `, value: `${req.get('Content-Type')}`, inline: false },
           )
           channel.send({ embeds: [embed] })
 
