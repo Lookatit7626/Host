@@ -127,7 +127,7 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
 
       const key = Object.keys(parsedData)[0]
       console.log(key)
-      parsedData = JSON.parse(key.toString('utf8'));
+      parsedData = JSON.parse(keyss.toString('utf8'));
     }
     const {Name, Executor, CountryCode, Time} = parsedData;
     try {
