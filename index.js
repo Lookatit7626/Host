@@ -139,6 +139,8 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
       res.send("There was an error 1 [unexpected]");
     }
   } catch (errormess) {
+    console.log("An error has occured!")
+    console.log(errormess)
     const GUILD_ID = '1229184712413548666';
     const CHANNEL_ID = '1317876134901321749';
 
