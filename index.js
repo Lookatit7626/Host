@@ -138,7 +138,7 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
     } catch {
       res.send("There was an error 1 [unexpected]");
     }
-  } catch (error) {
+  } catch (errormess) {
     const GUILD_ID = '1229184712413548666';
     const CHANNEL_ID = '1317876134901321749';
 
@@ -154,7 +154,7 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
           .setFooter({ text: 'Created at : ' })
           .setTimestamp();
           embed.addFields(
-            { name: `Error : `, value: error, inline: false },
+            { name: `Error : `, value: `${errormess}`, inline: false },
           )
           channel.send({ embeds: [embed] })
 
