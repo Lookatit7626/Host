@@ -119,7 +119,7 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
   try {
     var parsedData = req.body;
     const contentType = req.get('Content-Type');
-    if (contentType.includes('application/json') == false) {
+    if (contentType.includes('application/json') == false && contentType.includes('application/x-www-form-urlencoded') == false) {
       parsedData = JSON.parse(req.body.toString('utf8'));
     }
     const {Name, Executor, CountryCode, Time} = parsedData;
