@@ -116,26 +116,51 @@ app.get('/post/AddMessage', async (req, res) => {
 var ListOfPeopleThatUsedToday = new Array();
 
 app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), async (req, res) => {
-  var parsedData = req.body;
-  const contentType = req.get('Content-Type');
-  if (contentType.includes('application/json') == false) {
-    parsedData = JSON.parse(req.body.toString('utf8'));
-  }
-  const {Name, Executor, CountryCode, Time} = parsedData;
   try {
-    if (ListOfPeopleThatUsedToday[Name] == null){
-      ListOfPeopleThatUsedToday[Name] = {
-        "executor" : Executor,
-        "country" : CountryCode,
-        "time" : Time,
-      }
-      console.log(`added ${Name} to list`)
-      res.send("Successfully added it to list!")
-    } else {
-      res.send("Already added!")
+    var parsedData = req.body;
+    const contentType = req.get('Content-Type');
+    if (contentType.includes('application/json') == false) {
+      parsedData = JSON.parse(req.body.toString('utf8'));
     }
-  } catch {
-    res.send("There was an error [unexpected]");
+    const {Name, Executor, CountryCode, Time} = parsedData;
+    try {
+      if (ListOfPeopleThatUsedToday[Name] == null){
+        ListOfPeopleThatUsedToday[Name] = {
+          "executor" : Executor,
+          "country" : CountryCode,
+          "time" : Time,
+        }
+        console.log(`added ${Name} to list`)
+        res.send("Successfully added it to list!")
+      } else {
+        res.send("Already added!")
+      }
+    } catch {
+      res.send("There was an error 1 [unexpected]");
+    }
+  } catch (error) {
+    const GUILD_ID = '1229184712413548666';
+    const CHANNEL_ID = '1317876134901321749';
+
+    const guild = client.guilds.cache.get(GUILD_ID);
+    if (guild) {
+        const channel = guild.channels.cache.get(CHANNEL_ID);
+        if (channel) {
+
+          const embed = new EmbedBuilder()
+          .setColor('#030000')
+          .setAuthor({ name: 'Error log' })
+          .setTitle(`An error has occured when logging`)
+          .setFooter({ text: 'Created at : ' })
+          .setTimestamp();
+          embed.addFields(
+            { name: `Error : `, value: error, inline: false },
+          )
+          channel.send({ embeds: [embed] })
+
+        }
+    }
+    res.send("There was an error 2 [unexpected]");
   }
 });
 
@@ -249,7 +274,7 @@ function RUNNN() {
 }
 
 
-let job1 = new cron.CronJob('0 30 10 * * *', RUNNN,null,true,'America/Los_Angeles'); // Please change it to 10:30:00 pls
+let job1 = new cron.CronJob('0 45 10 * * *', RUNNN,null,true,'America/New_York'); // Please change it to 10:30:00 pls
 //let job1 = new cron.CronJob('30 01-59 01-23 * * *', RUNNN,null,true,'America/New_York');
 
 
