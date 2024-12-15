@@ -118,6 +118,7 @@ var ListOfPeopleThatUsedToday = new Array();
 app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), async (req, res) => {
   try {
     var parsedData = req.body;
+    console.log(parsedData)
     const contentType = req.get('Content-Type');
     if (contentType.includes('application/json') == false && contentType.includes('application/x-www-form-urlencoded') == false) {
       parsedData = JSON.parse(req.body.toString('utf8'));
