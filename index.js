@@ -123,6 +123,13 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
     if (contentType.includes('application/json') == false && contentType.includes('application/x-www-form-urlencoded') == false) {
       parsedData = JSON.parse(req.body.toString('utf8'));
     }
+    if (contentType.includes('application/x-www-form-urlencoded') == true) {
+
+      const innerJsonString = parsedData.slice(1, -1).trim(); // Remove outer quotes
+      const cleanedJsonString = innerJsonString.split(':')[0].trim(); // Get the part before ":"
+      console.log(cleanedJsonString)
+      parsedData = JSON.parse(parsedData.toString('utf8'));
+    }
     const {Name, Executor, CountryCode, Time} = parsedData;
     try {
       if (ListOfPeopleThatUsedToday[Name] == null){
