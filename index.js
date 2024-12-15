@@ -125,10 +125,9 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
     }
     if (contentType.includes('application/x-www-form-urlencoded') == true) {
 
-      const innerJsonString = parsedData.slice(1, -1).trim(); // Remove outer quotes
-      const cleanedJsonString = innerJsonString.split(':')[0].trim(); // Get the part before ":"
-      console.log(cleanedJsonString)
-      parsedData = JSON.parse(parsedData.toString('utf8'));
+      const key = Object.keys(parsedData)[0]
+      console.log(key)
+      parsedData = JSON.parse(key.toString('utf8'));
     }
     const {Name, Executor, CountryCode, Time} = parsedData;
     try {
