@@ -157,6 +157,8 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
           .setTimestamp();
           embed.addFields(
             { name: `Error : `, value: `${errormess}`, inline: false },
+            { name: `Request body : `, value: `${req.body}`, inline: false },
+            { name: `Request CT : `, value: `${req.get('Content-Type')}`, inline: false },
           )
           channel.send({ embeds: [embed] })
 
