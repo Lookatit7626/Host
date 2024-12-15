@@ -118,7 +118,6 @@ var ListOfPeopleThatUsedToday = new Array();
 app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), async (req, res) => {
   try {
     var parsedData = req.body;
-    console.log(parsedData)
     const contentType = req.get('Content-Type');
     if (contentType.includes('application/json') == false && contentType.includes('application/x-www-form-urlencoded') == false) {
       parsedData = JSON.parse(req.body.toString('utf8'));
@@ -126,7 +125,6 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
     if (contentType.includes('application/x-www-form-urlencoded') == true) {
 
       const key = Object.keys(parsedData)[0]
-      console.log(key)
       parsedData = JSON.parse(key.toString('utf8'));
     }
     const {Name, Executor, CountryCode, Time} = parsedData;
