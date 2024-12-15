@@ -157,7 +157,7 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
         if (channel) {
 
           const embed = new EmbedBuilder()
-          .setColor('#030000')
+          .setColor('#C20303')
           .setAuthor({ name: 'Error log' })
           .setTitle(`An error has occured when logging`)
           .setFooter({ text: 'Created at : ' })
