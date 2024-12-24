@@ -21,8 +21,8 @@ module.exports = {
           option.setName('enabled')
             .setDescription('enabled or disabled')
             .addChoices(
-              { name: 'enabled', value: 'enable' },
-              { name: 'disabled', value: 'disable' },
+              { name: 'enabled', value: 'true' },
+              { name: 'disabled', value: 'false' },
             )
         )
         .addStringOption(option =>
@@ -67,7 +67,7 @@ module.exports = {
         axios.post("https://host-e2kt.onrender.com/referral/changeplayerreferral", {
             ReferralOwner: ReferralName,
             JSONArrayToChange: {expiry, enabled, usedamount},
-            TTTTT,
+            CheckVeri : TTTTT,
           });
           await interaction.reply({content:'sent command to server', ephemeral: true });
     } catch (error) {
