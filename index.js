@@ -209,7 +209,7 @@ const DBclient = new pgClient({
 host: process.env['host'],
 port: 25144,
 user: 'avnadmin',
-password: process.env['password'],
+password: process.env['passwordPg'],
 database: 'defaultdb',
 ssl: {
   rejectUnauthorized: false,
