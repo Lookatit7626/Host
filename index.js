@@ -206,16 +206,16 @@ function CheckExpiredDate(TodayDate, ToCheckDate) {
 const { Client : pgClient } = require('pg');
 
 const DBclient = new pgClient({
-host: process.env['host'],
-port: 25144,
-user: 'avnadmin',
-password: process.env['passwordPg'],
-database: 'defaultdb',
-ssl: {
-  rejectUnauthorized: false,
-},
-idleTimeoutMillis: 30000,
-connectionTimeoutMillis: 2000,
+  host: process.env['host'],
+  port: 25144,
+  user: 'avnadmin',
+  password: process.env['passwordPg'],
+  database: 'defaultdb',
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
 const NameOfDB = "TEST_REFERRAL" //MAIN IS REFERRAL, TEST is TEST_REFERRAL
