@@ -63,10 +63,11 @@ module.exports = {
     }
     
     try {
+        const TTTTT = process.env['CPRPassword']
         axios.post("https://host-e2kt.onrender.com/referral/changeplayerreferral", {
             ReferralOwner: ReferralName,
             JSONArrayToChange: {expiry, enabled, usedamount},
-            process.env['CPRPassword'],
+            TTTTT,
           });
           await interaction.reply({content:'sent command to server', ephemeral: true });
     } catch (error) {
