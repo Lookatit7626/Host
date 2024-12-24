@@ -338,7 +338,7 @@ app.get('/referral/:player', async (req, res) => {
           }
           
       }    else {
-          res.send(`print("The referral has expired!");loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL"))()`)
+          res.send(`print("The referral has expired!"); loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL"))()`)
       }
   }
   
