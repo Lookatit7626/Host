@@ -332,9 +332,9 @@ app.get('/referral/:player', async (req, res) => {
 
               await DBclient.query(`UPDATE ${NameOfDB} SET UsedAmount = ${UsedAmount + 1} WHERE ReferalOwner = $1;`,[player])
 
-              res.send(`loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL"))()`)
+              res.send(`print("Successfully redeem the referral"); loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL"))()`)
           } else {
-              res.send(`loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL"))()`)
+              res.send(`print("you have already redeem one referral!"); loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL"))()`)
           }
           
       }    else {

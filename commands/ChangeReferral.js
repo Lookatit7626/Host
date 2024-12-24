@@ -1,4 +1,4 @@
-console.log('CommandPlayer.js');
+console.log('ChangeReferral.js');
 const { SlashCommandBuilder } = require('discord.js');
 const axios = require('axios');
 const { MessageActionRow, PermissionsBitField, MessageInput } = require('discord.js');
@@ -9,32 +9,38 @@ function wait(ms) {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('https-command')
-		.setDescription('only for developers - used to send commands to https server')
+		.setName('change-referral')
+		.setDescription('only for developers - change someone referral')
         .addStringOption(option =>
             option
-              .setName('referralname')
+              .setName('referral-name')
               .setDescription('get referral name')
               .setRequired(true)
           )
-          .addStringOption(option =>
-            option
-              .setName('args')
-              .setDescription('set arguments')
-              .setRequired(true)
-          )
-          .addStringOption(option =>
-            option.setName('enabled')
-              .setDescription('enabled or disabled')
-              .addChoices(
-                { name: 'enabled', value: 'enable' },
-                { name: 'disabled', value: 'disable' },
-              )
-          ),
+        .addStringOption(option =>
+          option.setName('enabled')
+            .setDescription('enabled or disabled')
+            .addChoices(
+              { name: 'enabled', value: 'enable' },
+              { name: 'disabled', value: 'disable' },
+            )
+        )
+        .addStringOption(option =>
+          option
+            .setName('used-amount')
+            .setDescription('changed used amount')
+        )
+        .addStringOption(option =>
+          option
+            .setName('expiry')
+            .setDescription('set expiry YYYY-MM-DD')
+        ),
 	async execute(interaction) {
 
-    const ReferralName = interaction.options.getString('referralname');
+    const ReferralName = interaction.options.getString('referral-name');
     const enabled = interaction.options.getString('enabled');
+    const usedamount = interaction.options.getString('used-amount');
+    const expiry = interaction.options.getString('expiry');
 
     if(!interaction.guild) {
       await interaction.reply({content:'It must be in a guild!', ephemeral: false });
@@ -57,9 +63,10 @@ module.exports = {
     }
     
     try {
-        axios.post("https://host-e2kt.onrender.com/post/AddMessage", {
-            Name: player,
-            Command: command,
+        axios.post("https://host-e2kt.onrender.com/referral/changeplayerreferral", {
+            ReferralOwner: ReferralName,
+            JSONArrayToChange: {expiry, enabled, usedamount},
+            process.env['CPRPassword'],
           });
           await interaction.reply({content:'sent command to server', ephemeral: true });
     } catch (error) {
