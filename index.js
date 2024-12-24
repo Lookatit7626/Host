@@ -344,7 +344,7 @@ app.get('/referral/:player', async (req, res) => {
   
 });
 
-app.post('/referral/addplayer', async (req, res) => {
+app.post('/referral/addreferral', async (req, res) => {
   try {
       const { ReferralOwner, Expiry, CheckVeri } = req.body;
       if (CheckVeri == process.env['APRPassword']) {

@@ -1,4 +1,4 @@
-console.log('ChangeReferral.js');
+console.log('AddReferral.js');
 const { SlashCommandBuilder } = require('discord.js');
 const axios = require('axios');
 const { MessageActionRow, PermissionsBitField, MessageInput } = require('discord.js');
@@ -9,26 +9,12 @@ function wait(ms) {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('change-referral')
-		.setDescription('only for developers - change someone referral')
-        .addStringOption(option =>
-            option
-              .setName('referral-name')
-              .setDescription('get referral name')
-              .setRequired(true)
-          )
-        .addStringOption(option =>
-          option.setName('enabled')
-            .setDescription('enabled or disabled')
-            .addChoices(
-              { name: 'enabled', value: 'true' },
-              { name: 'disabled', value: 'false' },
-            )
-        )
+		.setName('add-referral')
+		.setDescription('only for developers - add a referral')
         .addStringOption(option =>
           option
-            .setName('used-amount')
-            .setDescription('changed used amount')
+            .setName('referral-name')
+            .setDescription('set referral')
         )
         .addStringOption(option =>
           option
@@ -38,8 +24,6 @@ module.exports = {
 	async execute(interaction) {
 
     const ReferralName = interaction.options.getString('referral-name');
-    const enabled = interaction.options.getString('enabled');
-    const usedamount = interaction.options.getString('used-amount');
     const expiry = interaction.options.getString('expiry');
 
     if(!interaction.guild) {
@@ -63,13 +47,13 @@ module.exports = {
     }
     
     try {
-        const TTTTT = process.env['CPRPassword']
-        axios.post("https://host-e2kt.onrender.com/referral/changeplayerreferral", {
+        const TTTTT = process.env['APRPassword']
+        axios.post("https://host-e2kt.onrender.com/referral/addreferral", {
             ReferralOwner: ReferralName,
-            JSONArrayToChange: JSON.stringify({"enabled" : enabled,"usedamount" : usedamount, "expire" : expiry}),
+            Expiry: expiry,
             CheckVeri : TTTTT,
           });
-          await interaction.reply({content:`Changed the settings of the referral : ${ReferralName}`, ephemeral: true });
+          await interaction.reply({content:`Added the referral : ${ReferralName}`, ephemeral: true });
     } catch (error) {
         await interaction.reply({content:'there was an error sending the command!', ephemeral: true });
     }
