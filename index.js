@@ -203,9 +203,9 @@ function CheckExpiredDate(TodayDate, ToCheckDate) {
 }
 
 
-const { Client } = require('pg');
+const { pgClient } = require('pg');
 
-const DBclient = new Client({
+const DBclient = new pgClient({
 host: process.env['host'],
 port: 25144,
 user: 'avnadmin',
