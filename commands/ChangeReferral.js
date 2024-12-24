@@ -13,7 +13,7 @@ module.exports = {
 		.setDescription('only for developers - used to send commands to https server')
         .addStringOption(option =>
             option
-              .setName('referral-name')
+              .setName('referralname')
               .setDescription('get referral name')
               .setRequired(true)
           )
@@ -33,8 +33,7 @@ module.exports = {
           ),
 	async execute(interaction) {
 
-    const player = interaction.options.getString('command');
-    const command = interaction.options.getString('args');
+    const ReferralName = interaction.options.getString('referralname');
     const enabled = interaction.options.getString('enabled');
 
     if(!interaction.guild) {
