@@ -201,7 +201,7 @@ function CheckExpiredDate(TodayDate, ToCheckDate) {
       return false
   }
 }
-
+/*
 
 const { Client : pgClient } = require('pg');
 
@@ -389,7 +389,7 @@ app.post('/referral/changeplayerreferral', async (req, res) => {
 //REFERRAL STUFF
 
 
-
+*/
 
 app.use((req, res, next) => {
   error404(res)
