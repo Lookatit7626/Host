@@ -173,6 +173,224 @@ app.post('/post/EnterMessage' , express.raw({ type: '*/*', limit: '10mb' }), asy
   }
 });
 
+function GetDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1; // JavaScript months are 0-indexed
+  const day = today.getDate();
+
+  const formattedDate = `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+
+  return formattedDate; //Year-Month-Day
+}
+
+function CheckExpiredDate(TodayDate, ToCheckDate) {
+  try {
+      const ToCheckDateArray = ToCheckDate.split("-")
+      const TodayDateArray = TodayDate.split("-")
+
+      if (TodayDateArray[0] < ToCheckDateArray[0]) {
+          return true
+      } else if (TodayDateArray[1] < ToCheckDateArray[1]) {
+          return true
+      } else if (TodayDateArray[2] <= ToCheckDateArray[2]) {
+          return true
+      }
+      return false
+  } catch {
+      return false
+  }
+}
+
+
+const { Client } = require('pg');
+
+const DBclient = new Client({
+host: process.env['host'],
+port: 25144,
+user: 'avnadmin',
+password: process.env['password'],
+database: 'defaultdb',
+ssl: {
+  rejectUnauthorized: false,
+},
+idleTimeoutMillis: 30000,
+connectionTimeoutMillis: 2000,
+});
+
+const NameOfDB = "TEST_REFERRAL" //MAIN IS REFERRAL, TEST is TEST_REFERRAL
+const NameOfDB2 = "IP_LOGS"
+
+const CreateTable = `
+  CREATE TABLE IF NOT EXISTS ${NameOfDB} (
+      ReferalOwner VARCHAR(255),
+      Enabled VARCHAR(8),
+      UsedAmount INT,
+      EXPIRE VARCHAR(255)
+  );
+`
+
+const CreateTable2 = `
+  CREATE TABLE IF NOT EXISTS ${NameOfDB2} (
+      IP VARCHAR(255)
+  );
+`
+
+async function connectToDatabase() {
+  await DBclient.connect();
+  console.log('Connected to PostgreSQL');
+
+  try {
+      res = await DBclient.query(`SELECT * FROM ${NameOfDB}`);
+      //console.log(res.rows);
+      console.log("Postgres DB Works!")
+  } catch (errorAsError){
+      if (errorAsError == `error: relation "${NameOfDB.toLowerCase()}" does not exist`) {
+          console.log(`${NameOfDB} DONT EXIST??? THAT SHOULD NOT HAPPEN...`)
+          DBclient.query(CreateTable);
+          console.log(`created '${NameOfDB}' table`)
+      }
+  }
+
+  try {
+      res = await DBclient.query(`SELECT * FROM ${NameOfDB2}`);
+      //console.log(res.rows);
+      console.log("Postgres DB2 Works!")
+  } catch (errorAsError){
+      if (errorAsError == `error: relation "${NameOfDB2.toLowerCase()}" does not exist`) {
+          console.log(`${NameOfDB2} DONT EXIST??? THAT SHOULD NOT HAPPEN...`)
+          DBclient.query(CreateTable2);
+          console.log(`created '${NameOfDB2}' table`)
+      }
+  }
+}
+
+connectToDatabase();
+
+async function PostGresAddReferal(ReferalName, Expire) {
+//DBclient.connect(); // Get a client from the pool
+try {
+    ReferalName = ReferalName.toLowerCase()
+    const Querty2 = `SELECT * FROM ${NameOfDB} WHERE ReferalOwner = $1 LIMIT 1`
+    const result = await DBclient.query(Querty2, [ReferalName]);
+    if (result.rowCount > 0) {
+        console.log("EXISTING")
+      return true;  // Referral owner exists
+     }
+    
+    const Query = `
+      INSERT INTO ${NameOfDB} (ReferalOwner, Expire, Enabled, UsedAmount) 
+      VALUES ($1, $2, true, 0)
+      RETURNING *;
+    `;
+    const insertRes = await DBclient.query(Query, [ReferalName, Expire]);
+} catch (err) {
+  console.error('Error executing query', err);
+} finally {
+  //DBclient.end(); // Release the client back to the pool
+}
+}
+
+async function AddReferal(ReferalName, Expire = '2050-01-01') {
+  PostGresAddReferal(ReferalName, Expire)
+}
+
+AddReferal('Eclipse', '2090-12-31'); // YYYY MM DD
+
+//REFERRAL STUFF
+
+app.get('/referral/:player', async (req, res) => {
+  let clientIp = req.ip;
+  if (req.headers['x-forwarded-for']) {
+      clientIp = req.headers['x-forwarded-for'].split(',')[0]; // Get the first IP in the list
+  }
+  
+  const player = req.params.player.toLowerCase();
+  const result = await DBclient.query(`SELECT * FROM ${NameOfDB} WHERE ReferalOwner = $1 LIMIT 1`, [player]);
+  if (result.rowCount == 0) {
+      res.send(`print("Unknown referral!"); loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL`);
+  } else {
+      //Check if Referral is enabled
+      const ReferralEnabled = await DBclient.query(`SELECT DISTINCT Enabled FROM ${NameOfDB} WHERE ReferalOwner = $1 LIMIT 1`,[player])
+      
+      const ReferralExpiryR = await DBclient.query(`SELECT DISTINCT expire FROM ${NameOfDB} WHERE ReferalOwner = $1 LIMIT 1`,[player])
+      const ReferralExpiry = (ReferralExpiryR.rows[0].expire).toString()
+      console.log(clientIp)
+      
+      if (ReferralEnabled.rows[0].enabled == 'true' && CheckExpiredDate(GetDate(), ReferralExpiry)) {
+
+          //Check if IP is already used.
+          const Used = await DBclient.query(`SELECT * FROM ${NameOfDB2} WHERE IP = $1 LIMIT 1`, [clientIp]);
+          if (Used.rowCount == 0){
+
+              await DBclient.query(`INSERT INTO ${NameOfDB2} (IP) VALUES ($1) ` , [clientIp])
+
+              const rowsofrows = await DBclient.query(`SELECT DISTINCT UsedAmount FROM ${NameOfDB} WHERE ReferalOwner = $1 LIMIT 1` , [player])
+
+              const UsedAmount = rowsofrows.rows[0].usedamount
+              console.log(UsedAmount)
+
+              await DBclient.query(`UPDATE ${NameOfDB} SET UsedAmount = ${UsedAmount + 1} WHERE ReferalOwner = $1;`,[player])
+
+              res.send(`loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL"))()`)
+          } else {
+              res.send(`loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL"))()`)
+          }
+          
+      }    else {
+          res.send(`print("The referral has expired!");loadstring(game:HttpGet("https://pastebin.com/raw/GThUiBFL"))()`)
+      }
+  }
+  
+});
+
+app.post('/referral/addplayer', async (req, res) => {
+  try {
+      const { ReferralOwner, Expiry, CheckVeri } = req.body;
+      if (CheckVeri == process.env['APRPassword']) {
+          AddReferal(ReferralOwner, Expiry);
+          res.send("Success!")
+      } else {
+          res.send("Lack of permission!", 403)
+      }
+  } catch {
+      res.send("An error has occured!")
+  }
+});
+
+app.post('/referral/changeplayerreferral', async (req, res) => {
+  try {
+      var { ReferralOwner, JSONArrayToChange, CheckVeri } = req.body;
+
+      if (CheckVeri != process.env['CPRPassword']) {
+          res.send(`lack of permission`, 403)
+          return false
+      }
+      ReferralOwner = ReferralOwner.toLowerCase()
+      
+      const SQLReferralOwner = await DBclient.query(`SELECT * FROM ${NameOfDB} WHERE ReferalOwner = $1 LIMIT 1;`,[ReferralOwner])
+      console.log(SQLReferralOwner.rows[0])
+      
+      const DeJSON = JSON.parse(JSONArrayToChange)
+      
+      const ChangeExpire = DeJSON.expire || SQLReferralOwner.rows[0].expire
+      const ChangeEnabled = DeJSON.enabled || SQLReferralOwner.rows[0].enabled
+      const ChangeUsedAmount = DeJSON.usedamount || SQLReferralOwner.rows[0].usedamount
+
+      await DBclient.query(`UPDATE ${NameOfDB} SET EXPIRE = $2, Enabled = $3, UsedAmount = $4 WHERE ReferalOwner = $1;`,[ReferralOwner, ChangeExpire, ChangeEnabled, ChangeUsedAmount])
+      
+      res.send(`success data! : ${ChangeExpire} | ${ChangeEnabled} | ${ChangeUsedAmount}`)
+      
+  } catch(error) {
+      res.send(`An error has occured! : ${error}`)
+  }
+});
+
+//REFERRAL STUFF
+
+
+
+
 app.use((req, res, next) => {
   error404(res)
 });
