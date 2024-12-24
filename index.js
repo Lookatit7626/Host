@@ -6,6 +6,71 @@ const express = require('express');
 const mySecret = process.env['Token'];
 const cron = require('cron');
 
+const { Client : pgClient } = require('pg');
+
+const DBclient = new pgClient({
+  host: process.env['host'],
+  port: 25144,
+  user: 'avnadmin',
+  password: process.env['passwordPg'],
+  database: 'defaultdb',
+  ssl: {
+    rejectUnauthorized: false,
+  },
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 25000,
+});
+
+const NameOfDB = "TEST_REFERRAL" //MAIN IS REFERRAL, TEST is TEST_REFERRAL
+const NameOfDB2 = "IP_LOGS"
+
+const CreateTable = `
+  CREATE TABLE IF NOT EXISTS ${NameOfDB} (
+      ReferalOwner VARCHAR(255),
+      Enabled VARCHAR(8),
+      UsedAmount INT,
+      EXPIRE VARCHAR(255)
+  );
+`
+
+const CreateTable2 = `
+  CREATE TABLE IF NOT EXISTS ${NameOfDB2} (
+      IP VARCHAR(255)
+  );
+`
+
+async function connectToDatabase() {
+  console.log("Attempting to connect to PostgreSQL")
+  await DBclient.connect();
+  console.log('Connected to PostgreSQL');
+
+  try {
+      res = await DBclient.query(`SELECT * FROM ${NameOfDB}`);
+      //console.log(res.rows);
+      console.log("Postgres DB Works!")
+  } catch (errorAsError){
+      if (errorAsError == `error: relation "${NameOfDB.toLowerCase()}" does not exist`) {
+          console.log(`${NameOfDB} DONT EXIST??? THAT SHOULD NOT HAPPEN...`)
+          DBclient.query(CreateTable);
+          console.log(`created '${NameOfDB}' table`)
+      }
+  }
+
+  try {
+      res = await DBclient.query(`SELECT * FROM ${NameOfDB2}`);
+      //console.log(res.rows);
+      console.log("Postgres DB2 Works!")
+  } catch (errorAsError){
+      if (errorAsError == `error: relation "${NameOfDB2.toLowerCase()}" does not exist`) {
+          console.log(`${NameOfDB2} DONT EXIST??? THAT SHOULD NOT HAPPEN...`)
+          DBclient.query(CreateTable2);
+          console.log(`created '${NameOfDB2}' table`)
+      }
+  }
+}
+
+connectToDatabase();
+
 const app = express();
 const port = 8080;
 var AllCommand = "";
@@ -201,72 +266,6 @@ function CheckExpiredDate(TodayDate, ToCheckDate) {
       return false
   }
 }
-
-
-const { Client : pgClient } = require('pg');
-
-const DBclient = new pgClient({
-  host: process.env['host'],
-  port: 25144,
-  user: 'avnadmin',
-  password: process.env['passwordPg'],
-  database: 'defaultdb',
-  ssl: {
-    rejectUnauthorized: false,
-  },
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
-});
-
-const NameOfDB = "TEST_REFERRAL" //MAIN IS REFERRAL, TEST is TEST_REFERRAL
-const NameOfDB2 = "IP_LOGS"
-
-const CreateTable = `
-  CREATE TABLE IF NOT EXISTS ${NameOfDB} (
-      ReferalOwner VARCHAR(255),
-      Enabled VARCHAR(8),
-      UsedAmount INT,
-      EXPIRE VARCHAR(255)
-  );
-`
-
-const CreateTable2 = `
-  CREATE TABLE IF NOT EXISTS ${NameOfDB2} (
-      IP VARCHAR(255)
-  );
-`
-
-async function connectToDatabase() {
-  console.log("Attempting to connect to PostgreSQL")
-  await DBclient.connect();
-  console.log('Connected to PostgreSQL');
-
-  try {
-      res = await DBclient.query(`SELECT * FROM ${NameOfDB}`);
-      //console.log(res.rows);
-      console.log("Postgres DB Works!")
-  } catch (errorAsError){
-      if (errorAsError == `error: relation "${NameOfDB.toLowerCase()}" does not exist`) {
-          console.log(`${NameOfDB} DONT EXIST??? THAT SHOULD NOT HAPPEN...`)
-          DBclient.query(CreateTable);
-          console.log(`created '${NameOfDB}' table`)
-      }
-  }
-
-  try {
-      res = await DBclient.query(`SELECT * FROM ${NameOfDB2}`);
-      //console.log(res.rows);
-      console.log("Postgres DB2 Works!")
-  } catch (errorAsError){
-      if (errorAsError == `error: relation "${NameOfDB2.toLowerCase()}" does not exist`) {
-          console.log(`${NameOfDB2} DONT EXIST??? THAT SHOULD NOT HAPPEN...`)
-          DBclient.query(CreateTable2);
-          console.log(`created '${NameOfDB2}' table`)
-      }
-  }
-}
-
-connectToDatabase();
 
 async function PostGresAddReferal(ReferalName, Expire) {
 //DBclient.connect(); // Get a client from the pool
