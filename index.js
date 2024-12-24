@@ -201,7 +201,7 @@ function CheckExpiredDate(TodayDate, ToCheckDate) {
       return false
   }
 }
-/*
+
 
 const { Client : pgClient } = require('pg');
 
@@ -237,6 +237,7 @@ const CreateTable2 = `
 `
 
 async function connectToDatabase() {
+  console.log("Attempting to connect to PostgreSQL")
   await DBclient.connect();
   console.log('Connected to PostgreSQL');
 
@@ -389,7 +390,7 @@ app.post('/referral/changeplayerreferral', async (req, res) => {
 //REFERRAL STUFF
 
 
-*/
+
 
 app.use((req, res, next) => {
   error404(res)
