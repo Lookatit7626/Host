@@ -215,7 +215,7 @@ const DBclient = new pgClient({
     rejectUnauthorized: false,
   },
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 10000,
 });
 
 const NameOfDB = "TEST_REFERRAL" //MAIN IS REFERRAL, TEST is TEST_REFERRAL
