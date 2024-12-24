@@ -13,7 +13,7 @@ module.exports = {
 		.setDescription('only for developers - used to send commands to https server')
         .addStringOption(option =>
             option
-              .setName('referralname')
+              .setName('referral-name')
               .setDescription('get referral name')
               .setRequired(true)
           )
@@ -22,11 +22,20 @@ module.exports = {
               .setName('args')
               .setDescription('set arguments')
               .setRequired(true)
+          )
+          .addStringOption(option =>
+            option.setName('enabled')
+              .setDescription('enabled or disabled')
+              .addChoices(
+                { name: 'enabled', value: 'enable' },
+                { name: 'disabled', value: 'disable' },
+              )
           ),
 	async execute(interaction) {
 
     const player = interaction.options.getString('command');
     const command = interaction.options.getString('args');
+    const enabled = interaction.options.getString('enabled');
 
     if(!interaction.guild) {
       await interaction.reply({content:'It must be in a guild!', ephemeral: false });

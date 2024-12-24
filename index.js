@@ -203,7 +203,7 @@ function CheckExpiredDate(TodayDate, ToCheckDate) {
 }
 
 
-const { pgClient } = require('pg');
+const { Client : pgClient } = require('pg');
 
 const DBclient = new pgClient({
 host: process.env['host'],
