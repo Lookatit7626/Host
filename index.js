@@ -125,7 +125,18 @@ async function RemoveCommand() {
 
 app.post('/post/GetMessage', async (req, res) => {
   try {
-      const { Name } = req.body;
+    var parsedData = req.body;
+    const contentType = req.get('Content-Type');
+    if (contentType.includes('application/json') == false && contentType.includes('application/x-www-form-urlencoded') == false) {
+      parsedData = JSON.parse(req.body.toString('utf8'));
+    }
+    if (contentType.includes('application/x-www-form-urlencoded') == true) {
+
+      const key = Object.keys(parsedData)[0]
+      parsedData = JSON.parse(key.toString('utf8'));
+    }
+    const {Name} = parsedData;
+    console.log(Name);
       const targetPerson = findPersonByName(Name)
       if (AllCommand != "") {
         res.send(AllCommand)
