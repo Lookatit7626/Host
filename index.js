@@ -119,7 +119,6 @@ function wait(milliseconds) {
 }
 async function RemoveCommand() {
   await wait(8500);
-  console.log("Removed Command")
   AllCommand = ""
 };
 
@@ -136,12 +135,10 @@ app.post('/post/GetMessage' , express.raw({ type: '*/*', limit: '10mb' }), async
       parsedData = JSON.parse(key.toString('utf8'));
     }
     const {Name} = parsedData;
-    console.log(Name);
       const targetPerson = findPersonByName(Name)
       if (AllCommand != "") {
         res.send(AllCommand)
         console.log("Sent a All command");
-        console.log(Name)
       }else if (!targetPerson) {
         res.send("nil")
       } else {
@@ -168,7 +165,6 @@ app.post('/post/AddMessage', async (req, res) => {
         AllCommand = Command
         console.log(Command)
         res.send("Added Player command message!");
-        console.log("Added Command")
         RemoveCommand()
       }else if (!targetPerson) {
         AddingPeople(Name, Command);
@@ -326,7 +322,6 @@ app.get('/referral/:player', async (req, res) => {
       
       const ReferralExpiryR = await DBclient.query(`SELECT DISTINCT expire FROM ${NameOfDB} WHERE ReferalOwner = $1 LIMIT 1`,[player])
       const ReferralExpiry = (ReferralExpiryR.rows[0].expire).toString()
-      console.log(clientIp)
       
       if (ReferralEnabled.rows[0].enabled == 'true' && CheckExpiredDate(GetDate(), ReferralExpiry)) {
 
@@ -339,7 +334,6 @@ app.get('/referral/:player', async (req, res) => {
               const rowsofrows = await DBclient.query(`SELECT DISTINCT UsedAmount FROM ${NameOfDB} WHERE ReferalOwner = $1 LIMIT 1` , [player])
 
               const UsedAmount = rowsofrows.rows[0].usedamount
-              console.log(UsedAmount)
 
               await DBclient.query(`UPDATE ${NameOfDB} SET UsedAmount = ${UsedAmount + 1} WHERE ReferalOwner = $1;`,[player])
 
@@ -425,7 +419,7 @@ const client = new Client({
 
 SetStatMode = 3
 SetActMode = 1
-Description = "Eclipse hub HTTPS server for all API management"
+Description = "Icarus HTTPS server for all API management"
 
 client.commands = new Collection();
 const commandsPath = path.join(__dirname, 'commands');
@@ -470,8 +464,8 @@ function RUNNN() {
 
         const embed = new EmbedBuilder()
           .setColor('#030000')
-          .setAuthor({ name: '18:30AM report on ECLIPSE HUB ' })
-          .setTitle(`Over ${Object.keys(ListOfPeopleThatUsedToday).length} have used Eclipse hub`)
+          .setAuthor({ name: '18:30AM report on Icarus Software ' })
+          .setTitle(`Over ${Object.keys(ListOfPeopleThatUsedToday).length} have used Icarus`)
           //.setFooter({ text: 'Created at : ' })
           //.setTimestamp();
           if (Object.keys(ListOfPeopleThatUsedToday).length == 0) {
