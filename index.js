@@ -123,7 +123,7 @@ async function RemoveCommand() {
   AllCommand = ""
 };
 
-app.post('/post/GetMessage', async (req, res) => {
+app.post('/post/GetMessage' , express.raw({ type: '*/*', limit: '10mb' }), async (req, res) => {
   try {
     var parsedData = req.body;
     const contentType = req.get('Content-Type');
